@@ -1,4 +1,4 @@
-package com.hackathon.medreminder.posology;
+package com.hackathon.medreminder.posology.service;
 
 import com.hackathon.medreminder.posology.dto.PosologyMapper;
 import com.hackathon.medreminder.posology.dto.PosologyRequest;

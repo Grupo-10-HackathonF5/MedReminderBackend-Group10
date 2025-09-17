@@ -2,7 +2,7 @@ package com.hackathon.medreminder.posology.controller;
 
 import com.hackathon.medreminder.posology.dto.PosologyRequest;
 import com.hackathon.medreminder.posology.dto.PosologyResponse;
-import com.hackathon.medreminder.posology.PosologyService;
+import com.hackathon.medreminder.posology.service.PosologyService;
 import com.hackathon.medreminder.shared.dto.ApiMessage;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
