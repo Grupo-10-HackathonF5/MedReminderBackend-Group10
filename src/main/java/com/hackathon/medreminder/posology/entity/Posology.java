@@ -12,7 +12,6 @@ import java.time.LocalDateTime;
 @Entity
 @Table(name = "posologies")
 @Data
-@NoArgsConstructor
 @AllArgsConstructor
 public class Posology {
     
