@@ -1,0 +1,48 @@
+spring:
+  application:
+    name: momenttum
+
+  output:
+    ansi:
+      enabled: ALWAYS
+
+  config:
+    import:
+      - optional:file:.env[.properties]
+
+  datasource:
+    url: jdbc:mysql://${DB_HOST:localhost}:${DB_PORT:3306}/${DB_NAME:mydatabase}?createDatabaseIfNotExist=true
+    username: ${DB_USER}
+    password: ${DB_PASSWORD}
+    driver-class-name: com.mysql.cj.jdbc.Driver
+
+  sql:
+    init:
+      mode: always
+
+  jpa:
+    hibernate:
+      ddl-auto: update
+      format_sql: true
+    defer-datasource-initialization: true
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.MySQLDialect
+    show-sql: true
+
+  springdoc:
+    api-docs:
+      path: /v3/api-docs
+    swagger-ui:
+      path: /swagger-ui.html
+
+  validation:
+    fail-fast: false
+
+logging:
+  level:
+    root: DEBUG
+    org.springframework.jdbc.datasource: DEBUG
+
+server:
+  port: ${SERVER_PORT:8080}
