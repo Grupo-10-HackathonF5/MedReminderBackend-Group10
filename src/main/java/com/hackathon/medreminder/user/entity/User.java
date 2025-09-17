@@ -1,5 +1,6 @@
 package com.hackathon.medreminder.user.entity;
 
+import com.hackathon.medreminder.user.role.Role;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -16,6 +17,9 @@ public class User {
     private Long id;
 
     @Column(nullable = false)
+    private String username;
+
+    @Column(nullable = false)
     private String firstName;
 
     @Column(nullable = false)
@@ -26,4 +30,8 @@ public class User {
 
     @Column(nullable = false)
     private String password;
+
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
+    private Role role;
 }
