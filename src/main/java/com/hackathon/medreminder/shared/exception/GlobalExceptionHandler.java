@@ -1,5 +1,6 @@
 package com.hackathon.medreminder.shared.exception;
 
+import com.hackathon.medreminder.posology.exception.PosologyNotFoundById;
 import com.hackathon.medreminder.user.exception.UserAlreadyExistsByEmail;
 import com.hackathon.medreminder.user.exception.UserAlreadyExistsByUsername;
 import com.hackathon.medreminder.user.exception.UserNotFoundByUsername;
@@ -17,6 +18,13 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(UserNotFoundByUsername.class)
     public ResponseEntity<ErrorResponse> handleUserNotFoundByUsername(UserNotFoundByUsername exception, HttpServletRequest request) {
+        HttpStatus status = HttpStatus.NOT_FOUND;
+        ErrorResponse body = new ErrorResponse(status, exception.getMessage(), request);
+        return ResponseEntity.status(status).body(body);
+    }
+
+    @ExceptionHandler(PosologyNotFoundById.class)
+    public ResponseEntity<ErrorResponse> handlePosologyNotFoundById(PosologyNotFoundById exception, HttpServletRequest request) {
         HttpStatus status = HttpStatus.NOT_FOUND;
         ErrorResponse body = new ErrorResponse(status, exception.getMessage(), request);
         return ResponseEntity.status(status).body(body);
