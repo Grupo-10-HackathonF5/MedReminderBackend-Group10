@@ -7,6 +7,7 @@ import com.hackathon.medreminder.posology.entity.Posology;
 import com.hackathon.medreminder.posology.exception.PosologyNotFoundById;
 import com.hackathon.medreminder.posology.frecuency.FrequencyUnit;
 import com.hackathon.medreminder.posology.repository.PosologyRepository;
+import com.hackathon.medreminder.posology.service.PosologyService;
 import com.hackathon.medreminder.shared.util.EntityMapperUtil;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -15,7 +16,6 @@ import org.mockito.*;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.time.LocalDate;
-import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
