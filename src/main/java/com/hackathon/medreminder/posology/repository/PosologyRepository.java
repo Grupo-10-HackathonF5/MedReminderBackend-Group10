@@ -1,6 +1,6 @@
-package com.hackathon.medreminder.Posology.repository;
+package com.hackathon.medreminder.posology.repository;
 
-import com.hackathon.medreminder.Posology.entity.Posology;
+import com.hackathon.medreminder.posology.entity.Posology;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;

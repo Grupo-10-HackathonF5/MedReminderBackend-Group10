@@ -1,8 +1,8 @@
-package com.hackathon.medreminder.Posology.service;
+package com.hackathon.medreminder.posology.service;
 
-import com.hackathon.medreminder.Posology.dto.PosologyDTO;
-import com.hackathon.medreminder.Posology.entity.Posology;
-import com.hackathon.medreminder.Posology.repository.PosologyRepository;
+import com.hackathon.medreminder.posology.dto.PosologyDTO;
+import com.hackathon.medreminder.posology.entity.Posology;
+import com.hackathon.medreminder.posology.repository.PosologyRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 

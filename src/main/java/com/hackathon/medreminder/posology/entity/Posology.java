@@ -1,4 +1,4 @@
-package com.hackathon.medreminder.Posology.entity;
+package com.hackathon.medreminder.posology.entity;
 
 import com.hackathon.medreminder.enums.FrequencyUnit;
 import lombok.AllArgsConstructor;
