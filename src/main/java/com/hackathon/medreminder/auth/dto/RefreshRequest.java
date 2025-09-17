@@ -1,4 +1,4 @@
-package com.SleepUp.SU.auth.dto;
+package com.hackathon.medreminder.auth.dto;
 
 import jakarta.validation.constraints.NotBlank;
 

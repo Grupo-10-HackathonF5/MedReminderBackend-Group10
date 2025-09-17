@@ -1,6 +1,6 @@
-package com.SleepUp.SU.auth;
+package com.hackathon.medreminder.auth;
 
-import com.SleepUp.SU.security.jwt.JwtService;
+import com.hackathon.medreminder.security.jwt.JwtService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;

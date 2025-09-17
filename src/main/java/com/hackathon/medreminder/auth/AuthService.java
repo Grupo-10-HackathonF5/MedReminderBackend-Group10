@@ -1,18 +1,12 @@
-package com.SleepUp.SU.auth;
+package com.hackathon.medreminder.auth;
 
-
-import com.SleepUp.SU.auth.dto.*;
-import com.SleepUp.SU.security.jwt.JwtService;
-import com.SleepUp.SU.user.User;
-import com.SleepUp.SU.user.UserRepository;
-import com.SleepUp.SU.user.utils.UserServiceHelper;
-import com.SleepUp.SU.user.dto.UserMapper;
-import com.SleepUp.SU.user.dto.UserRequest;
-import com.SleepUp.SU.user.dto.UserResponse;
-import com.SleepUp.SU.user.role.Role;
-import com.SleepUp.SU.utils.ApiMessageDto;
-import com.SleepUp.SU.utils.EmailService;
-import jakarta.mail.MessagingException;
+import com.hackathon.medreminder.auth.dto.*;
+import com.hackathon.medreminder.security.jwt.JwtService;
+import com.hackathon.medreminder.shared.dto.ApiMessage;
+import com.hackathon.medreminder.user.entity.User;
+import com.hackathon.medreminder.user.role.Role;
+import com.hackathon.medreminder.user.service.UserService;
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpHeaders;
@@ -21,31 +15,24 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-
-import jakarta.servlet.http.HttpServletRequest;
 
 @Service
 @RequiredArgsConstructor
 public class AuthService {
 
-    private final UserRepository userRepository;
-    private final PasswordEncoder passwordEncoder;
-    private final TokenBlacklistService tokenBlacklistService;
-    private final UserMapper userMapper;
-    private final JwtService jwtService;
     private final AuthenticationManager authenticationManager;
-    private final UserServiceHelper userServiceHelper;
-    private final EmailService emailService;
+    private final UserService userService;
+    private final AuthMapper authMapper;
+    private final JwtService jwtService;
+    private final TokenBlacklistService tokenBlacklistService;
 
     @Transactional
-    public UserResponse register(UserRequest request) throws MessagingException {
-        userServiceHelper.validateUserDoesNotExist(request.username(), request.email());
-        String encodedPassword = passwordEncoder.encode(request.password());
-        User user = userMapper.toEntity(request, encodedPassword, Role.USER);
-        emailService.sendWelcomeEmail(request.email(), request.username());
-        return userMapper.toResponse(userRepository.save(user));
+    public RegisterResponse register(RegisterRequest request) {
+        userService.validateEmailIsNew(request.email());
+        User unSaved = authMapper.toUser(request, Role.USER);
+        User savedUser = userService.createUser(unSaved);
+        return authMapper.toRegisterResponse(savedUser, "User successfully registered");
     }
 
     public AuthResponse login(LoginRequest loginRequest) {
@@ -75,7 +62,7 @@ public class AuthService {
         return new AuthResponse("refresh", "Bearer", newAccessToken, userDetails.getUsername(), newRefreshToken);
     }
 
-    public ApiMessageDto logout(HttpServletRequest request) {
+    public ApiMessage logout(HttpServletRequest request) {
         String authorizationHeader = request.getHeader(HttpHeaders.AUTHORIZATION);
         if (authorizationHeader == null || !authorizationHeader.startsWith("Bearer ")) {
             throw new AuthenticationCredentialsNotFoundException("No Bearer token found in Authorization header");
@@ -91,7 +78,7 @@ public class AuthService {
             tokenBlacklistService.addToBlacklist(refreshToken);
         }
 
-        return new ApiMessageDto("Logout successful");
+        return new ApiMessage("Logout successful");
     }
 
 }

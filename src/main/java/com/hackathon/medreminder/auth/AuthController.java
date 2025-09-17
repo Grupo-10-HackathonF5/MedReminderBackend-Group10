@@ -1,11 +1,8 @@
-package com.SleepUp.SU.auth;
+package com.hackathon.medreminder.auth;
 
-import com.SleepUp.SU.auth.dto.*;
-import com.SleepUp.SU.user.CustomUserDetails;
-import com.SleepUp.SU.user.dto.UserRequest;
-import com.SleepUp.SU.user.dto.UserResponse;
-import com.SleepUp.SU.utils.ApiMessageDto;
-import jakarta.mail.MessagingException;
+import com.hackathon.medreminder.auth.dto.*;
+import com.hackathon.medreminder.shared.dto.ApiMessage;
+import com.hackathon.medreminder.user.CustomUserDetails;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -22,7 +19,7 @@ public class AuthController {
 
     @PostMapping("/register")
     @ResponseStatus(HttpStatus.CREATED)
-    public UserResponse register(@Valid @RequestBody UserRequest request) throws MessagingException {
+    public RegisterResponse register(@Valid @RequestBody RegisterRequest request)  {
         return authService.register(request);
     }
 
@@ -41,7 +38,7 @@ public class AuthController {
 
     @PostMapping("/logout")
     @ResponseStatus(HttpStatus.OK)
-    public ApiMessageDto logout(HttpServletRequest request) {
+    public ApiMessage logout(HttpServletRequest request) {
         return authService.logout(request);
     }
 }
