@@ -1,4 +1,4 @@
-package com.hackathon.medreminder.security.jwt;
+package com.hackathon.medreminder.shared.security.jwt;
 
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;

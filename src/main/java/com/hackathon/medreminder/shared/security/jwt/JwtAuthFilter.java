@@ -1,7 +1,7 @@
-package com.hackathon.medreminder.security.jwt;
+package com.hackathon.medreminder.shared.security.jwt;
 
 import com.hackathon.medreminder.auth.TokenBlacklistService;
-import com.hackathon.medreminder.security.RestAuthenticationEntryPoint;
+import com.hackathon.medreminder.shared.security.RestAuthenticationEntryPoint;
 import com.hackathon.medreminder.user.service.UserService;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;

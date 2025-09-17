@@ -1,9 +1,9 @@
-package com.hackathon.medreminder.security.config;
+package com.hackathon.medreminder.shared.security.config;
 
 import com.hackathon.medreminder.auth.TokenBlacklistService;
-import com.hackathon.medreminder.security.RestAuthenticationEntryPoint;
-import com.hackathon.medreminder.security.jwt.JwtAuthFilter;
-import com.hackathon.medreminder.security.jwt.JwtService;
+import com.hackathon.medreminder.shared.security.RestAuthenticationEntryPoint;
+import com.hackathon.medreminder.shared.security.jwt.JwtAuthFilter;
+import com.hackathon.medreminder.shared.security.jwt.JwtService;
 import com.hackathon.medreminder.user.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;

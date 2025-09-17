@@ -1,4 +1,4 @@
-package com.hackathon.medreminder.security;
+package com.hackathon.medreminder.shared.security;
 
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
