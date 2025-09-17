@@ -1,8 +1,7 @@
 package com.hackathon.medreminder.auth;
 
-import com.hackathon.medreminder.security.jwt.JwtService;
+import com.hackathon.medreminder.shared.security.jwt.JwtService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
 import java.util.Date;
@@ -39,19 +38,5 @@ public class TokenBlacklistService {
         }
 
         return true;
-    }
-
-    public void removeFromBlacklist(String token) {
-        blacklistedTokens.remove(token);
-    }
-
-    @Scheduled(fixedRate = 3600000)
-    public void removeExpiredTokens() {
-        long currentTime = System.currentTimeMillis();
-        blacklistedTokens.entrySet().removeIf(entry -> currentTime > entry.getValue());
-    }
-
-    public int getBlacklistedTokensCount() {
-        return blacklistedTokens.size();
     }
 }

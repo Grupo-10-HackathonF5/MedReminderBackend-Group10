@@ -1,7 +1,7 @@
 package com.hackathon.medreminder.auth;
 
 import com.hackathon.medreminder.auth.dto.*;
-import com.hackathon.medreminder.security.jwt.JwtService;
+import com.hackathon.medreminder.shared.security.jwt.JwtService;
 import com.hackathon.medreminder.shared.dto.ApiMessage;
 import com.hackathon.medreminder.user.entity.User;
 import com.hackathon.medreminder.user.role.Role;
@@ -29,7 +29,6 @@ public class AuthService {
 
     @Transactional
     public RegisterResponse register(RegisterRequest request) {
-        userService.validateEmailIsNew(request.email());
         User unSaved = authMapper.toUser(request, Role.USER);
         User savedUser = userService.createUser(unSaved);
         return authMapper.toRegisterResponse(savedUser, "User successfully registered");
