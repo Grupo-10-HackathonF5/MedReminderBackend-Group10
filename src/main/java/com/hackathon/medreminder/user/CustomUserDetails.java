@@ -1,5 +1,6 @@
-package com.SleepUp.SU.user;
+package com.hackathon.medreminder.user;
 
+import com.hackathon.medreminder.user.entity.User;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;

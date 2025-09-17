@@ -1,4 +1,4 @@
-package com.SleepUp.SU.user.role;
+package com.hackathon.medreminder.user.role;
 
 public enum Role {
     USER,
