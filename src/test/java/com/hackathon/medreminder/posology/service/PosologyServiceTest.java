@@ -2,7 +2,7 @@ package com.hackathon.medreminder.posology.service;
 
 import com.hackathon.medreminder.posology.dto.PosologyDTO;
 import com.hackathon.medreminder.posology.entity.Posology;
-import com.hackathon.medreminder.enums.FrequencyUnit;
+import com.hackathon.medreminder.posology.frecuency.FrequencyUnit;
 import com.hackathon.medreminder.posology.repository.PosologyRepository;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.BeforeEach;

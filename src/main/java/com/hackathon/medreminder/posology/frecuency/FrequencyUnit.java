@@ -1,4 +1,4 @@
-package com.hackathon.medreminder.enums;
+package com.hackathon.medreminder.posology.frecuency;
 
 public enum FrequencyUnit {
     HOUR,
