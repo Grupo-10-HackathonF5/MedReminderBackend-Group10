@@ -1,6 +1,7 @@
 package com.hackathon.medreminder.auth;
 
 import com.hackathon.medreminder.shared.security.jwt.JwtService;
+import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -9,6 +10,7 @@ import java.util.concurrent.ConcurrentHashMap;
 
 @Service
 @RequiredArgsConstructor
+@Getter
 public class TokenBlacklistService {
 
     private final ConcurrentHashMap<String, Long> blacklistedTokens = new ConcurrentHashMap<>();
