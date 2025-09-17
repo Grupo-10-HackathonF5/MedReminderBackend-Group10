@@ -11,6 +11,9 @@ public record RegisterResponse(
         @Schema(description = "User's first name", example = "Alice", required = true)
         String firstName,
 
+        @Schema(description = "User's username", example = "alice123", required = true)
+        String username,
+
         @Schema(description = "User's last name", example = "Smith", required = true)
         String lastName,
 
