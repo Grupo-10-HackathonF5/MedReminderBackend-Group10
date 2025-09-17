@@ -1,10 +1,11 @@
-package com.hackathon.medreminder.posology.service;
+package com.hackathon.medreminder.posology;
 
 import com.hackathon.medreminder.posology.dto.PosologyMapper;
 import com.hackathon.medreminder.posology.dto.PosologyRequest;
 import com.hackathon.medreminder.posology.dto.PosologyResponse;
 import com.hackathon.medreminder.posology.entity.Posology;
 import com.hackathon.medreminder.posology.exception.PosologyNotFoundById;
+import com.hackathon.medreminder.posology.frecuency.FrequencyUnit;
 import com.hackathon.medreminder.posology.repository.PosologyRepository;
 import com.hackathon.medreminder.shared.util.EntityMapperUtil;
 import org.junit.jupiter.api.BeforeEach;
@@ -14,6 +15,7 @@ import org.mockito.*;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.time.LocalDate;
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
@@ -45,9 +47,9 @@ class PosologyServiceTest {
         posology = new Posology(1L, 10L, LocalDate.now(), null, LocalDate.now().atStartOfDay(),
                 3, null, 5.0, "Take with food", 10.0);
 
-        posologyRequest = new PosologyRequest(1L, 10L, LocalDate.now(), null,
-                LocalDate.now().atStartOfDay(), 3, null, 5.0,
-                "Take with food", 10.0);
+        posologyRequest = new PosologyRequest(
+                10L, LocalDate.now(), LocalDate.now(), LocalDate.now().atStartOfDay(),
+                3, FrequencyUnit.HOUR, 5.0, "Take with food", 10.0);
 
         posologyResponse = new PosologyResponse(1L, 10L, LocalDate.now(), null,
                 LocalDate.now().atStartOfDay(), 3, null, 5.0,
@@ -60,7 +62,7 @@ class PosologyServiceTest {
         List<PosologyResponse> dtos = List.of(posologyResponse);
 
         when(posologyRepository.findAll()).thenReturn(entities);
-        when(entityMapperUtil.mapEntitiesToDTOs(eq(entities), any())).thenReturn(dtos);
+        when(entityMapperUtil.mapEntitiesToDTOs(eq(entities), any())).thenReturn(List.of(posologyResponse));
 
         List<PosologyResponse> result = posologyService.getAllPosologies();
 
@@ -94,7 +96,7 @@ class PosologyServiceTest {
         List<PosologyResponse> dtos = List.of(posologyResponse);
 
         when(posologyRepository.findByMedicationId(posology.getMedicationId())).thenReturn(entities);
-        when(entityMapperUtil.mapEntitiesToDTOs(eq(entities), any())).thenReturn(dtos);
+        when(entityMapperUtil.mapEntitiesToDTOs(eq(entities), any())).thenReturn(List.of(posologyResponse));
 
         List<PosologyResponse> result = posologyService.getPosologiesByMedicationId(posology.getMedicationId());
 
@@ -109,7 +111,7 @@ class PosologyServiceTest {
         List<PosologyResponse> dtos = List.of(posologyResponse);
 
         when(posologyRepository.findActivePosologies(any())).thenReturn(entities);
-        when(entityMapperUtil.mapEntitiesToDTOs(eq(entities), any())).thenReturn(dtos);
+        when(entityMapperUtil.mapEntitiesToDTOs(eq(entities), any())).thenReturn(List.of(posologyResponse));
 
         List<PosologyResponse> result = posologyService.getActivePosologies();
 
