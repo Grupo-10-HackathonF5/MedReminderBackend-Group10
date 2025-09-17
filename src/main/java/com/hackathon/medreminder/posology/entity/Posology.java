@@ -1,9 +1,7 @@
 package com.hackathon.medreminder.posology.entity;
 
 import com.hackathon.medreminder.posology.frecuency.FrequencyUnit;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import jakarta.persistence.*;
 import java.time.LocalDate;
@@ -11,7 +9,9 @@ import java.time.LocalDateTime;
 
 @Entity
 @Table(name = "posologies")
-@Data
+@Getter
+@Setter
+@Builder
 @NoArgsConstructor
 @AllArgsConstructor
 public class Posology {
