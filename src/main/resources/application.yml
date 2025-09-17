@@ -41,8 +41,14 @@ spring:
 
 logging:
   level:
-    root: DEBUG
-    org.springframework.jdbc.datasource: DEBUG
+    root: INFO
+#    org.springframework.jdbc.datasource: DEBUG
 
 server:
   port: ${SERVER_PORT:8080}
+
+
+jwt:
+  secret: ${JWT_SECRET_KEY:IPMaQEBhefMwnNhzvK9taBqokCl0KGNu+qTRiKsvmGU=}
+  expiration-ms: 1800000
+  refresh-expiration-ms: 604800000
