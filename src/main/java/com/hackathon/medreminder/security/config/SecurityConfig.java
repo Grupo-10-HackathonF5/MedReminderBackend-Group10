@@ -1,11 +1,10 @@
-package com.SleepUp.SU.security.config;
+package com.hackathon.medreminder.security.config;
 
-
-import com.SleepUp.SU.auth.TokenBlacklistService;
-import com.SleepUp.SU.security.RestAuthenticationEntryPoint;
-import com.SleepUp.SU.security.jwt.JwtAuthFilter;
-import com.SleepUp.SU.security.jwt.JwtService;
-import com.SleepUp.SU.user.admin.UserAdminService;
+import com.hackathon.medreminder.auth.TokenBlacklistService;
+import com.hackathon.medreminder.security.RestAuthenticationEntryPoint;
+import com.hackathon.medreminder.security.jwt.JwtAuthFilter;
+import com.hackathon.medreminder.security.jwt.JwtService;
+import com.hackathon.medreminder.user.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -36,7 +35,7 @@ public class SecurityConfig {
     }
 
     @Bean
-    public JwtAuthFilter jwtAuthFilter(JwtService jwtService, UserAdminService userService, TokenBlacklistService tokenBlacklistService) {
+    public JwtAuthFilter jwtAuthFilter(JwtService jwtService, UserService userService, TokenBlacklistService tokenBlacklistService) {
         return new JwtAuthFilter(restAuthenticationEntryPoint, jwtService, userService, tokenBlacklistService);
     }
 
@@ -45,7 +44,6 @@ public class SecurityConfig {
 
         http
                 .csrf(AbstractHttpConfigurer::disable)
-                .exceptionHandling(exceptionHandling -> exceptionHandling.authenticationEntryPoint(restAuthenticationEntryPoint))
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class)
                 .authorizeHttpRequests(auth -> auth

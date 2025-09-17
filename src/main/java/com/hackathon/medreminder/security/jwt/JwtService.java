@@ -1,4 +1,4 @@
-package com.SleepUp.SU.security.jwt;
+package com.hackathon.medreminder.security.jwt;
 
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
@@ -24,7 +24,7 @@ public class JwtService {
 
     private final SecretKey secretKey;
     private final long jwtExpirationMs;
-    private final long jwtRefreshExpirationMs = 7 * 24 * 60 * 60 * 1000; // Example: 7 days in milliseconds
+    private final long jwtRefreshExpirationMs = 7 * 24 * 60 * 60 * 1000;
 
     public JwtService(
             @Value("${jwt.secret}") String secret,

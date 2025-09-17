@@ -1,8 +1,8 @@
-package com.SleepUp.SU.security.jwt;
+package com.hackathon.medreminder.security.jwt;
 
-import com.SleepUp.SU.auth.TokenBlacklistService;
-import com.SleepUp.SU.security.RestAuthenticationEntryPoint;
-import com.SleepUp.SU.user.admin.UserAdminService;
+import com.hackathon.medreminder.auth.TokenBlacklistService;
+import com.hackathon.medreminder.security.RestAuthenticationEntryPoint;
+import com.hackathon.medreminder.user.service.UserService;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -26,7 +26,7 @@ public class JwtAuthFilter extends OncePerRequestFilter {
 
     private final RestAuthenticationEntryPoint restAuthenticationEntryPoint;
     private final JwtService jwtService;
-    private final UserAdminService userService;
+    private final UserService userService;
     private final TokenBlacklistService tokenBlacklistService;
 
     @Override
