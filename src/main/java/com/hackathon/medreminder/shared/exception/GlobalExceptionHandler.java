@@ -7,6 +7,8 @@ import com.hackathon.medreminder.user.exception.UserNotFoundByUsername;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.FieldError;
+import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
@@ -41,6 +43,19 @@ public class GlobalExceptionHandler {
     public ResponseEntity<ErrorResponse> handleUserAlreadyExistsByEmail(UserAlreadyExistsByEmail exception, HttpServletRequest request) {
         HttpStatus status = HttpStatus.CONFLICT;
         ErrorResponse body = new ErrorResponse(status, exception.getMessage(), request);
+        return ResponseEntity.status(status).body(body);
+    }
+
+    @ExceptionHandler(MethodArgumentNotValidException.class)
+    public ResponseEntity<ErrorResponse> handleValidationExceptions(MethodArgumentNotValidException exception, HttpServletRequest request) {
+        Map<String, String> errors = new HashMap<>();
+        exception.getBindingResult().getAllErrors().forEach(error -> {
+            String fieldName = ((FieldError) error).getField();
+            String errorMessage = error.getDefaultMessage();
+            errors.put(fieldName, errorMessage);
+        });
+        HttpStatus status = HttpStatus.BAD_REQUEST;
+        ErrorResponse body = new ErrorResponse(status, errors, request);
         return ResponseEntity.status(status).body(body);
     }
 
