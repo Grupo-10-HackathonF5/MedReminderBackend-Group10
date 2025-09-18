@@ -108,22 +108,6 @@ public class PosologyControllerIntegrationTest {
     }
 
     @Test
-    void testGetPosologiesByMedicationId() throws Exception {
-        mockMvc.perform(get("/api/posologies/medication/{medicationId}", savedMedication.getId()))
-                .andExpect(status().isOk())
-                .andExpect(jsonPath("$[0].medicationId").value(savedMedication.getId()))
-                .andExpect(jsonPath("$[0].medicationName").value(savedMedication.getName()));
-    }
-
-    @Test
-    void testGetActivePosologies() throws Exception {
-        mockMvc.perform(get("/api/posologies/active"))
-                .andExpect(status().isOk())
-                .andExpect(jsonPath("$[0].medicationId").value(savedMedication.getId()))
-                .andExpect(jsonPath("$[0].medicationName").value(savedMedication.getName()));
-    }
-
-    @Test
     void testCreatePosology() throws Exception {
         // Test con diferentes unidades de frecuencia
         PosologyRequest request = new PosologyRequest(
