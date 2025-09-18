@@ -1,5 +1,6 @@
 package com.hackathon.medreminder.posology.entity;
 
+import com.hackathon.medreminder.dose.entity.Dose;
 import com.hackathon.medreminder.medication.entity.Medication;
 import com.hackathon.medreminder.posology.frecuency.FrequencyUnit;
 import com.hackathon.medreminder.user.entity.User;
@@ -8,6 +9,8 @@ import lombok.*;
 import jakarta.persistence.*;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Table(name = "posologies")
@@ -58,4 +61,7 @@ public class Posology {
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "user_id", nullable = false)
     private User user;
+
+    @OneToMany(mappedBy = "posology", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Dose> doses = new ArrayList<>();
 }
