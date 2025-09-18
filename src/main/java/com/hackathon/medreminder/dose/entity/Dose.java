@@ -21,9 +21,6 @@ public class Dose {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name = "reminder_id")
-    private Long reminderId;
-
     @Column(name = "scheduled_day")
     private LocalDate scheduledDay;
 
@@ -36,7 +33,7 @@ public class Dose {
     @Column(name = "taken_time")
     private LocalDateTime takenTime;
 
-    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @ManyToOne(fetch = FetchType.EAGER, optional = false)
     @JoinColumn(name = "posology_id", nullable = false)
     private Posology posology;
 

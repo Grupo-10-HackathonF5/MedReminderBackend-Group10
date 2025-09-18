@@ -1,6 +1,7 @@
 package com.hackathon.medreminder.dose.service;
 
 import com.hackathon.medreminder.dose.dto.DoseMapper;
+import com.hackathon.medreminder.dose.dto.DoseMapperImpl;
 import com.hackathon.medreminder.dose.dto.DoseResponse;
 import com.hackathon.medreminder.dose.entity.Dose;
 import com.hackathon.medreminder.dose.exception.DoseNotFoundById;
@@ -127,7 +128,7 @@ public class DoseService {
 
         // Convertir a DTO
         return storedDoses.stream()
-            .map(dose -> doseMapper.toResponse(dose, dose.getScheduledDateTime()))
+            .map(dose -> doseMapper.toResponse(dose))
             .collect(Collectors.toList());
     }
 

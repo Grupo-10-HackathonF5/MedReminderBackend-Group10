@@ -2,10 +2,9 @@ package com.hackathon.medreminder.dose.controller;
 
 import com.hackathon.medreminder.dose.dto.DoseResponse;
 import com.hackathon.medreminder.dose.service.DoseService;
-import com.hackathon.medreminder.shared.dto.ApiMessage;
 
+import lombok.RequiredArgsConstructor;
 import org.springframework.format.annotation.DateTimeFormat;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -15,13 +14,10 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/api/doses")
+@RequiredArgsConstructor
 public class DoseController {
 
     private final DoseService doseService;
-
-    public DoseController(DoseService doseService) {
-        this.doseService = doseService;
-    }
 
     @GetMapping("/user/{userId}")
     public ResponseEntity<List<DoseResponse>> getUserDoses(
