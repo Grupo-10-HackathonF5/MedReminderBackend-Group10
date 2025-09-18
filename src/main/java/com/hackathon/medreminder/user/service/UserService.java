@@ -3,6 +3,7 @@ package com.hackathon.medreminder.user.service;
 import com.hackathon.medreminder.user.CustomUserDetails;
 import com.hackathon.medreminder.user.entity.User;
 import com.hackathon.medreminder.user.exception.UserAlreadyExistsByEmail;
+import com.hackathon.medreminder.user.exception.UserNotFoundById;
 import com.hackathon.medreminder.user.exception.UserNotFoundByUsername;
 import com.hackathon.medreminder.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
@@ -25,9 +26,14 @@ public class UserService implements UserDetailsService {
         return userRepository.save(user);
     }
 
-    public User getUserByUsername(String username) {
+    public User getUserEntityByUsername(String username) {
         return userRepository.findByUsername(username)
                 .orElseThrow(() -> new UserNotFoundByUsername(username));
+    }
+
+    public User getUserEntityById(Long id) {
+        return userRepository.findById(id)
+                .orElseThrow(() -> new UserNotFoundById(id));
     }
 
 
@@ -42,7 +48,7 @@ public class UserService implements UserDetailsService {
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        User user = getUserByUsername(username);
+        User user = getUserEntityByUsername(username);
         return new CustomUserDetails(user);
     }
 }
