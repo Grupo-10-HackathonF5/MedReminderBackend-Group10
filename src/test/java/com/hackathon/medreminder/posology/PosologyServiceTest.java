@@ -11,6 +11,8 @@ import com.hackathon.medreminder.posology.frecuency.FrequencyUnit;
 import com.hackathon.medreminder.posology.repository.PosologyRepository;
 import com.hackathon.medreminder.posology.service.PosologyService;
 import com.hackathon.medreminder.shared.util.EntityMapperUtil;
+import com.hackathon.medreminder.user.entity.User;
+import com.hackathon.medreminder.user.service.UserService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -35,6 +37,9 @@ class PosologyServiceTest {
     MedicationService medicationService;
 
     @Mock
+    UserService userService;
+
+    @Mock
     private PosologyMapper posologyMapper;
 
     @Mock
@@ -47,15 +52,29 @@ class PosologyServiceTest {
     private PosologyRequest posologyRequest;
     private PosologyResponse posologyResponse;
     private Medication medication;
+    private  User user;
 
     @BeforeEach
     void setUp() {
         Medication medication = Medication.builder().id(10L).build();
-        posology = new Posology(1L, medication, LocalDate.now(), null, LocalDate.now().atStartOfDay(),
-                3, null, 5.0, "Take with food", 10.0);
+        user = User.builder()
+                .id(1L).build();
+        posology = Posology.builder()
+                .id(1L)
+                .medication(medication)
+                .startDate(LocalDate.now())
+                .user(user)
+                .dayTime(LocalDate.now().atStartOfDay())
+                .frequencyValue(3)
+                .frequencyUnit(FrequencyUnit.HOUR)
+                .quantity(5.0)
+                .reminderMessage("Take with food")
+                .dosesNumber(10.0)
+                .build();
+
 
         posologyRequest = new PosologyRequest(
-                10L, LocalDate.now(), LocalDate.now(), LocalDate.now().atStartOfDay(),
+                10L, user.getId(), LocalDate.now(), LocalDate.now(), LocalDate.now().atStartOfDay(),
                 3, FrequencyUnit.HOUR, 5.0, "Take with food", 10.0);
 
         posologyResponse = new PosologyResponse(1L, 10L, "medicationName", LocalDate.now(), null,
@@ -129,6 +148,7 @@ class PosologyServiceTest {
 
     @Test
     void createPosology_savesAndMaps() {
+        when(userService.getUserEntityById(user.getId())).thenReturn(user);
         when(medicationService.getMedicationEntityById(posologyRequest.medicationId())).thenReturn(medication);
         when(posologyMapper.toPosology(posologyRequest)).thenReturn(posology);
         when(posologyRepository.save(posology)).thenReturn(posology);
@@ -145,9 +165,19 @@ class PosologyServiceTest {
 
     @Test
     void updatePosology_updatesAndMaps() {
-        Posology updatedPosology = new Posology(posology.getId(), medication, posologyRequest.startDate(), posologyRequest.endDate(),
-                posologyRequest.dayTime(), posologyRequest.frequencyValue(), posologyRequest.frequencyUnit(), posologyRequest.quantity(),
-                posologyRequest.reminderMessage(), posologyRequest.dosesNumber());
+        Posology updatedPosology = Posology.builder()
+                .id(posology.getId())
+                .medication(medication)
+                .startDate(posologyRequest.startDate())
+                .endDate(posologyRequest.endDate())
+                .dayTime(posologyRequest.dayTime())
+                .frequencyValue(posologyRequest.frequencyValue())
+                .frequencyUnit(posologyRequest.frequencyUnit())
+                .quantity(posologyRequest.quantity())
+                .reminderMessage(posologyRequest.reminderMessage())
+                .dosesNumber(posologyRequest.dosesNumber())
+                .user(posology.getUser())
+                .build();
 
         when(posologyRepository.findById(posology.getId())).thenReturn(Optional.of(posology));
         when(medicationService.getMedicationEntityById(posologyRequest.medicationId())).thenReturn(medication);
