@@ -35,6 +35,13 @@ public class PosologyService {
         return posologyMapper.toResponse(getPosologyEntityById(id));
     }
 
+
+    public List<PosologyResponse> getActivePosologiesByUserId(Long userId) {
+        User user = userService.getUserEntityById(userId);
+        List<Posology> list = posologyRepository.findByUser_IdAndEndDateIsNullOrEndDateAfter(userId, LocalDate.now());
+        return entityMapperUtil.mapEntitiesToDTOs(list, posologyMapper::toResponse);
+    }
+
     public List<PosologyResponse> getPosologiesByUserId(Long userId) {
         User user = userService.getUserEntityById(userId);
         return entityMapperUtil.mapEntitiesToDTOs(posologyRepository.findByUser_Id(userId), posologyMapper::toResponse);
@@ -47,11 +54,6 @@ public class PosologyService {
     
     public List<PosologyResponse> getPosologiesByMedicationId(Long medicationId) {
         return entityMapperUtil.mapEntitiesToDTOs(posologyRepository.findByMedicationId(medicationId), posologyMapper::toResponse);
-    }
-    
-    public List<PosologyResponse> getActivePosologies() {
-        return entityMapperUtil.mapEntitiesToDTOs(posologyRepository.findActivePosologies(LocalDate.now()), posologyMapper::toResponse);
-
     }
     
     public PosologyResponse createPosology(PosologyRequest posologyRequest) {
