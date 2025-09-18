@@ -33,7 +33,7 @@ public class DoseService {
     /**
      * Genera las ocurrencias virtuales usando iCal4j sin persistir
      */
-    private List<LocalDateTime> generateVirtualOccurrences(Posology posology, LocalDateTime from, LocalDateTime to) throws ParseException {
+    public List<LocalDateTime> generateVirtualOccurrences(Posology posology, LocalDateTime from, LocalDateTime to) throws ParseException {
         // Mapear nuestro FrequencyUnit al formato RRULE de iCal4j
         String icalFreq = mapFrequencyUnitToICalFreq(posology.getFrequencyUnit());
         
@@ -80,7 +80,7 @@ public class DoseService {
     /**
      * Mapea nuestro FrequencyUnit al formato RRULE de iCal4j
      */
-    private String mapFrequencyUnitToICalFreq(FrequencyUnit frequencyUnit) {
+    public String mapFrequencyUnitToICalFreq(FrequencyUnit frequencyUnit) {
         return switch (frequencyUnit) {
             case HOURS -> "HOURLY";
             case HOURLY -> "HOURLY";
@@ -94,7 +94,7 @@ public class DoseService {
      * Crea físicamente las dosis en la base de datos para las ocurrencias que no existen
      */
     @Transactional
-    private List<Dose> createMissingDoses(Posology posology, List<LocalDateTime> scheduledTimes) {
+    public List<Dose> createMissingDoses(Posology posology, List<LocalDateTime> scheduledTimes) {
         List<Dose> createdDoses = new ArrayList<>();
         User user = posology.getUser();
         
@@ -162,7 +162,7 @@ public class DoseService {
     /**
      * Verifica si una posología está activa en un período dado
      */
-    private boolean isPosologyActiveInPeriod(Posology posology, LocalDateTime from, LocalDateTime to) {
+    public boolean isPosologyActiveInPeriod(Posology posology, LocalDateTime from, LocalDateTime to) {
         LocalDate fromDate = from.toLocalDate();
         LocalDate toDate = to.toLocalDate();
         
