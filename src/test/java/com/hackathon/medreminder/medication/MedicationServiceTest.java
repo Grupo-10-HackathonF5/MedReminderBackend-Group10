@@ -125,7 +125,7 @@ class MedicationServiceTest {
     @Test
     void createMedication_savesAndMaps() {
         when(userService.getUserEntityById(medicationRequest.userId())).thenReturn(user);
-        when(medicationMapper.toMedication(medicationRequest, user)).thenReturn(medication);
+        when(medicationMapper.toMedication(medicationRequest)).thenReturn(medication);
         when(medicationRepository.save(medication)).thenReturn(medication);
         when(medicationMapper.toResponse(medication)).thenReturn(medicationResponse);
 
@@ -133,7 +133,7 @@ class MedicationServiceTest {
 
         assertEquals(medicationResponse, response);
         verify(userService).getUserEntityById(medicationRequest.userId());
-        verify(medicationMapper).toMedication(medicationRequest, user);
+        verify(medicationMapper).toMedication(medicationRequest);
         verify(medicationRepository).save(medication);
         verify(medicationMapper).toResponse(medication);
     }

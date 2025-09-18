@@ -7,8 +7,7 @@ import org.mapstruct.Mapping;
 
 @Mapper(componentModel = "spring")
 public interface MedicationMapper {
-    @Mapping(source = "user", target = "user")
-    Medication toMedication(MedicationRequest medicationRequest, User user);
+    Medication toMedication(MedicationRequest medicationRequest);
 
     @Mapping(source = "user.id", target = "userId")
     MedicationResponse toResponse(Medication medication);
