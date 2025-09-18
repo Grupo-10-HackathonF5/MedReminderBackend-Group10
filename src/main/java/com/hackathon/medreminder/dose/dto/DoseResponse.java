@@ -1,4 +1,5 @@
 package com.hackathon.medreminder.dose.dto;
+import com.hackathon.medreminder.posology.frecuency.FrequencyUnit; // Importar FrequencyUnit
 
 import lombok.Builder;
 
@@ -15,5 +16,10 @@ public record DoseResponse(
         LocalDate scheduledDay,
         LocalDateTime scheduledDateTime,
         Boolean isTaken,
-        LocalDateTime takenTime
+        LocalDateTime takenTime,
+        String notes,
+                LocalDate startDate,
+        LocalDate endDate,
+        Integer frequencyValue,
+        FrequencyUnit frequencyUnit
 ) {}

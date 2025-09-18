@@ -18,6 +18,7 @@ public class CorsConfig {
 
         // Allow specific origins (update with your frontend URLs)
         configuration.setAllowedOrigins(Arrays.asList(
+                "http://localhost:5173",
                 "http://localhost:3000",    // React default
                 "http://localhost:4200",    // Angular default
                 "http://localhost:8081",    // Alternative port

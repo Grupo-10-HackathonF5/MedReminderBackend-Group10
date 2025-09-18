@@ -12,6 +12,11 @@ public interface DoseMapper {
     @Mapping(source = "dose.posology.medication.name", target = "medicationName")
     @Mapping(source = "dose.posology.dosesNumber", target = "dosesNumber")
     @Mapping(source = "dose.posology.medication.id", target = "medicationId")
+    @Mapping(source = "dose.posology.medication.notes", target = "notes") 
+    @Mapping(source = "dose.posology.startDate", target = "startDate")
+    @Mapping(source = "dose.posology.endDate", target = "endDate")
+    @Mapping(source = "dose.posology.frequencyValue", target = "frequencyValue")
+    @Mapping(source = "dose.posology.frequencyUnit", target = "frequencyUnit")
     DoseResponse toResponse(Dose dose);
 
 }
