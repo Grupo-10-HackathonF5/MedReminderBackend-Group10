@@ -66,7 +66,7 @@ class PosologyServiceTest {
                 .user(user)
                 .dayTime(LocalDate.now().atStartOfDay())
                 .frequencyValue(3)
-                .frequencyUnit(FrequencyUnit.HOUR)
+                .frequencyUnit(FrequencyUnit.HOURLY)
                 .quantity(5.0)
                 .reminderMessage("Take with food")
                 .dosesNumber(10.0)
@@ -75,7 +75,7 @@ class PosologyServiceTest {
 
         posologyRequest = new PosologyRequest(
                 10L, user.getId(), LocalDate.now(), LocalDate.now(), LocalDate.now().atStartOfDay(),
-                3, FrequencyUnit.HOUR, 5.0, "Take with food", 10.0);
+                3, FrequencyUnit.HOURLY, 5.0, "Take with food", 10.0);
 
         posologyResponse = new PosologyResponse(1L, 10L, "medicationName", LocalDate.now(), null,
                 LocalDate.now().atStartOfDay(), 3, null, 5.0,

@@ -12,9 +12,7 @@ import net.fortuna.ical4j.model.Recur;
 import org.springframework.stereotype.Service;
 
 import java.text.ParseException;
-import java.time.LocalDateTime;
-import java.time.ZoneId;
-import java.time.ZonedDateTime;
+import java.time.*;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
 
@@ -52,6 +50,16 @@ public class DoseService {
             results.add(dto);
         }
         return results;
+    }
+
+    public List<DoseResponse> getDosesForUserToday(Long userId) throws ParseException {
+        // Define start and end of today as datetime range
+        LocalDate today = LocalDate.now();
+        LocalDateTime startOfDay = today.atStartOfDay();
+        LocalDateTime endOfDay = today.atTime(LocalTime.MAX);
+
+        // Call the generic method providing today's date range
+        return getDosesForUser(userId, startOfDay, endOfDay);
     }
 
     public List<DoseResponse> getDosesForUser(Long userId, LocalDateTime from, LocalDateTime to) throws ParseException {
