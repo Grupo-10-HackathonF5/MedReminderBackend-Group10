@@ -25,9 +25,15 @@ public class MedicationController {
         return medicationService.getAllMedications();
     }
 
+    @GetMapping("/users/{userId}")
+    @ResponseStatus(HttpStatus.OK)
+    public List<MedicationResponse> getMedicationById(@PathVariable Long userId) {
+        return medicationService.getMedicationsByUserId(userId);
+    }
+
     @GetMapping("/{id}")
     @ResponseStatus(HttpStatus.OK)
-    public MedicationResponse getMedicationById(@PathVariable Long id) {
+    public MedicationResponse getMedicationByUserId(@PathVariable Long id) {
         return medicationService.getMedicationById(id);
     }
 
