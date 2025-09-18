@@ -3,6 +3,7 @@ package com.hackathon.medreminder.user.service;
 import com.hackathon.medreminder.user.CustomUserDetails;
 import com.hackathon.medreminder.user.entity.User;
 import com.hackathon.medreminder.user.exception.UserAlreadyExistsByEmail;
+import com.hackathon.medreminder.user.exception.UserAlreadyExistsByUsername;
 import com.hackathon.medreminder.user.exception.UserNotFoundById;
 import com.hackathon.medreminder.user.exception.UserNotFoundByUsername;
 import com.hackathon.medreminder.user.repository.UserRepository;
@@ -42,7 +43,7 @@ public class UserService implements UserDetailsService {
             throw new UserAlreadyExistsByEmail(email);
         }
         if (userRepository.existsByUsername(username)){
-            throw new UserNotFoundByUsername(username);
+            throw new UserAlreadyExistsByUsername(username);
         }
     }
 

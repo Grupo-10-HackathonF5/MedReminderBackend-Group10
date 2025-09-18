@@ -13,6 +13,7 @@ import org.springframework.stereotype.Service;
 import javax.crypto.SecretKey;
 import java.time.Instant;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.Map;
 import java.util.function.Function;
 
@@ -34,20 +35,18 @@ public class JwtService {
     }
 
     public String generateRefreshToken(UserDetails userDetails) {
-        Map<String, Object> claims = Map.of(
-                ROLE_CLAIM, userDetails.getAuthorities().stream()
-                        .map(GrantedAuthority::getAuthority)
-                        .toList()
-        );
+        Map<String, Object> claims = new HashMap<>();
+        claims.put(ROLE_CLAIM, userDetails.getAuthorities().stream()
+                .map(GrantedAuthority::getAuthority)
+                .toList());
         return buildToken(claims, userDetails.getUsername(), jwtRefreshExpirationMs);
     }
 
     public String generateAccessToken(UserDetails userDetails) {
-        Map<String, Object> claims = Map.of(
-                ROLE_CLAIM, userDetails.getAuthorities().stream()
-                        .map(GrantedAuthority::getAuthority)
-                        .toList()
-        );
+        Map<String, Object> claims = new HashMap<>();
+        claims.put(ROLE_CLAIM, userDetails.getAuthorities().stream()
+                .map(GrantedAuthority::getAuthority)
+                .toList());
         return buildToken(claims, userDetails.getUsername(), jwtExpirationMs);
     }
 
@@ -56,10 +55,10 @@ public class JwtService {
         Instant expiry = now.plusMillis(expirationMs);
 
         return Jwts.builder()
-                .claims(claims)
-                .subject(subject)
-                .issuedAt(Date.from(now))
-                .expiration(Date.from(expiry))
+                .setClaims(claims)  // Use setClaims instead of claims
+                .setSubject(subject)
+                .setIssuedAt(Date.from(now))
+                .setExpiration(Date.from(expiry))
                 .signWith(secretKey)
                 .compact();
     }
@@ -78,11 +77,11 @@ public class JwtService {
     }
 
     private Claims extractAllClaims(String token) {
-        return Jwts.parser()
-                .verifyWith(secretKey)
+        return Jwts.parserBuilder()  // Use parserBuilder instead of parser
+                .setSigningKey(secretKey)  // Use setSigningKey instead of verifyWith
                 .build()
-                .parseSignedClaims(token)
-                .getPayload();
+                .parseClaimsJws(token)  // Use parseClaimsJws instead of parseSignedClaims
+                .getBody();  // Use getBody instead of getPayload
     }
 
     private boolean isTokenExpired(String token) {
@@ -103,5 +102,4 @@ public class JwtService {
         }
         throw new RuntimeException("Invalid or expired refresh token");
     }
-
 }

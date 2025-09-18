@@ -45,6 +45,6 @@ public class Medication {
     private String notes;
 
     @OneToMany(mappedBy = "medication", cascade = CascadeType.ALL, orphanRemoval = true)
+    @Builder.Default  // This fixes the warning
     private List<Posology> posologies = new ArrayList<>();
-
 }

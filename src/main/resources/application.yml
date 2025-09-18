@@ -1,6 +1,6 @@
 spring:
   application:
-    name: momenttum
+    name: medreminder
 
   output:
     ansi:
@@ -52,3 +52,9 @@ jwt:
   secret: ${JWT_SECRET_KEY:IPMaQEBhefMwnNhzvK9taBqokCl0KGNu+qTRiKsvmGU=}
   expiration-ms: 1800000
   refresh-expiration-ms: 604800000
+
+management:
+    endpoints:
+      web:
+        exposure:
+          include: mappings

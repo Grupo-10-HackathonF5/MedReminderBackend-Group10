@@ -6,16 +6,13 @@ import com.hackathon.medreminder.dose.entity.Dose;
 import com.hackathon.medreminder.dose.exception.DoseNotFoundById;
 import com.hackathon.medreminder.dose.repository.DoseRepository;
 import com.hackathon.medreminder.posology.entity.Posology;
+import com.hackathon.medreminder.posology.frecuency.FrequencyUnit;
 import com.hackathon.medreminder.posology.repository.PosologyRepository;
 import lombok.RequiredArgsConstructor;
-import net.fortuna.ical4j.model.Recur;
 import org.springframework.stereotype.Service;
 
-import java.text.ParseException;
 import java.time.LocalDateTime;
-import java.time.ZoneId;
-import java.time.ZonedDateTime;
-import java.time.format.DateTimeFormatter;
+import java.time.temporal.ChronoUnit;
 import java.util.*;
 
 @Service
@@ -25,36 +22,48 @@ public class DoseService {
     private final PosologyRepository posologyRepository;
     private final DoseMapper doseMapper;
 
-    public List<DoseResponse> generateOccurrences(Posology posology, LocalDateTime from, LocalDateTime to) throws ParseException {
-        // Build RRULE string from Posology frequency fields
-        String rrule = "FREQ=" + posology.getFrequencyUnit().name() +
-                ";INTERVAL=" + posology.getFrequencyValue();
-        if (posology.getEndDate() != null) {
-            rrule += ";UNTIL=" + posology.getEndDate().format(DateTimeFormatter.ofPattern("yyyyMMdd")) + "T235959Z";
-        }
-
-        Recur recur = new Recur(rrule);
-
-        ZonedDateTime start = posology.getDayTime().atZone(ZoneId.systemDefault());
-        ZonedDateTime periodStart = from.atZone(ZoneId.systemDefault());
-        ZonedDateTime periodEnd = to.atZone(ZoneId.systemDefault());
-
-        // Get occurrences in the specified period
-        int valueDateTime = 1;
-        Iterable<? extends java.time.temporal.Temporal> occurrences = recur.getDates(start, periodStart, periodEnd, valueDateTime);
-
+    public List<DoseResponse> generateOccurrences(Posology posology, LocalDateTime from, LocalDateTime to) {
         List<DoseResponse> results = new ArrayList<>();
-        for (java.time.temporal.Temporal dt : occurrences) {
-            ZonedDateTime zdt = (ZonedDateTime) dt;
-            LocalDateTime scheduled = zdt.toLocalDateTime();
 
-            DoseResponse dto = doseMapper.fromRecurrence(posology, scheduled);
-            results.add(dto);
+        LocalDateTime current = posology.getDayTime();
+
+        // Adjust start time to be within the requested range
+        while (current.isBefore(from)) {
+            current = addFrequencyInterval(current, posology);
         }
+
+        // Generate occurrences within the range
+        while (!current.isAfter(to) &&
+                (posology.getEndDate() == null || !current.toLocalDate().isAfter(posology.getEndDate()))) {
+
+            DoseResponse dto = doseMapper.fromRecurrence(posology, current);
+            results.add(dto);
+
+            current = addFrequencyInterval(current, posology);
+        }
+
         return results;
     }
 
-    public List<DoseResponse> getDosesForUser(Long userId, LocalDateTime from, LocalDateTime to) throws ParseException {
+    private LocalDateTime addFrequencyInterval(LocalDateTime dateTime, Posology posology) {
+        int value = posology.getFrequencyValue();
+        FrequencyUnit unit = posology.getFrequencyUnit();
+
+        switch (unit) {
+            case HOUR:
+                return dateTime.plusHours(value);
+            case DAY:
+                return dateTime.plusDays(value);
+            case WEEK:
+                return dateTime.plusWeeks(value);
+            case MONTH:
+                return dateTime.plusMonths(value);
+            default:
+                throw new IllegalArgumentException("Unsupported frequency unit: " + unit);
+        }
+    }
+
+    public List<DoseResponse> getDosesForUser(Long userId, LocalDateTime from, LocalDateTime to) {
         List<Posology> posologies = posologyRepository.findByUser_Id(userId);
 
         List<DoseResponse> generatedDoses = new ArrayList<>();
@@ -64,15 +73,19 @@ public class DoseService {
 
         List<Dose> storedDoses = doseRepository.findByUser_IdAndScheduledDateTimeBetween(userId, from, to);
 
-        Map<LocalDateTime, DoseResponse> doseMap = new HashMap<>();
+        Map<String, DoseResponse> doseMap = new HashMap<>();
 
+        // Add generated doses
         for (DoseResponse d : generatedDoses) {
-            doseMap.put(d.scheduledDateTime(), d);
+            String key = d.posologyId() + "_" + d.scheduledDateTime().toString();
+            doseMap.put(key, d);
         }
 
+        // Override with stored doses (taken status)
         for (Dose d : storedDoses) {
             DoseResponse dto = doseMapper.toResponse(d, d.getScheduledDateTime());
-            doseMap.put(dto.scheduledDateTime(), dto);
+            String key = d.getPosology().getId() + "_" + d.getScheduledDateTime().toString();
+            doseMap.put(key, dto);
         }
 
         return new ArrayList<>(doseMap.values());
