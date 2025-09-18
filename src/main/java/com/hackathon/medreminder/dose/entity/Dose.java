@@ -30,8 +30,8 @@ public class Dose {
     @Column(name = "scheduled_date_time")
     private LocalDateTime scheduledDateTime;
 
-    @Column(name = "taken")
-    private Boolean taken;
+    @Column(name = "isTaken")
+    private Boolean isTaken;
 
     @Column(name = "taken_time")
     private LocalDateTime takenTime;

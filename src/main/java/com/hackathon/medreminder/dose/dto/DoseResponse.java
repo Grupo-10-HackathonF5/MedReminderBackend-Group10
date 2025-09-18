@@ -5,10 +5,13 @@ import java.time.LocalDateTime;
 
 public record DoseResponse(
         Long id,
-        Long reminderId,
+        Long posologyId,
+        String medicationName,
+        Double dosesNumber,
+        Long medicationId,
         LocalDate scheduledDay,
         LocalDateTime scheduledDateTime,
-        Boolean taken,
+        Boolean isTaken,
         LocalDateTime takenTime,
-        Long posologyId
+        Boolean takeDuringMeal
 ) {}

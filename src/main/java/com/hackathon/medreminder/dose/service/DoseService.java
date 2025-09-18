@@ -94,7 +94,7 @@ public class DoseService {
                     .user(user)
                     .scheduledDateTime(scheduledTime)
                     .scheduledDay(scheduledTime.toLocalDate())
-                    .taken(false)
+                    .isTaken(false)
                     .takenTime(null)
                     .build();
                 
@@ -171,7 +171,7 @@ public class DoseService {
     @Transactional
     public boolean markDoseAsTaken(Long doseId) {
         Dose dose = getDoseById(doseId);
-        dose.setTaken(true);
+        dose.setIsTaken(true);
         dose.setTakenTime(LocalDateTime.now());
         doseRepository.save(dose);
         return true;
@@ -180,7 +180,7 @@ public class DoseService {
     @Transactional
     public boolean markDoseAsNotTaken(Long doseId) {
         Dose dose = getDoseById(doseId);
-        dose.setTaken(false);
+        dose.setIsTaken(false);
         dose.setTakenTime(null);
         doseRepository.save(dose);
         return true;
@@ -192,7 +192,7 @@ public class DoseService {
     @Transactional
     public String toggleDoseStatus(Long doseId) {
         Dose dose = getDoseById(doseId);
-        if (Boolean.TRUE.equals(dose.getTaken())) {
+        if (Boolean.TRUE.equals(dose.getIsTaken())) {
             markDoseAsNotTaken(doseId);
             return "Dosis marcada como no tomada.";
         } else {
