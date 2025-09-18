@@ -16,10 +16,9 @@ public interface PosologyRepository extends JpaRepository<Posology, Long> {
     
     // Buscar posologías por medicamento
     List<Posology> findByMedicationId(Long medicationId);
-    
-    // Buscar posologías activas (sin fecha de fin o fecha de fin futura)
-    @Query("SELECT p FROM Posology p WHERE p.endDate IS NULL OR p.endDate >= :currentDate")
-    List<Posology> findActivePosologies(@Param("currentDate") LocalDate currentDate);
+
+    List<Posology> findByUser_IdAndEndDateIsNullOrEndDateAfter(Long userId, LocalDate currentDate);
+
 
     // Buscar posologías por rango de fechas
     @Query("SELECT p FROM Posology p WHERE p.startDate <= :endDate AND (p.endDate IS NULL OR p.endDate >= :startDate)")

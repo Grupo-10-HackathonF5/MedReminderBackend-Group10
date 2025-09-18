@@ -19,7 +19,7 @@ public class DoseController {
 
     private final DoseService doseService;
 
-    @GetMapping("/user/{userId}")
+    @GetMapping("/users/{userId}")
     public ResponseEntity<List<DoseResponse>> getUserDoses(
             @PathVariable Long userId,
             @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime from,
@@ -38,7 +38,7 @@ public class DoseController {
         return ResponseEntity.ok(result);
     }
 
-    @GetMapping("/{userId}/today")
+    @GetMapping("/users/{userId}/today")
     public ResponseEntity<List<DoseResponse>> getDosesForUserToday(@PathVariable Long userId) {
         try {
             List<DoseResponse> doses = doseService.getTodayDosesForUser(userId);
