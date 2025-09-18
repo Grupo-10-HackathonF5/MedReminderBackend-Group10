@@ -28,6 +28,11 @@ public class MedicationService {
         return entityMapperUtil.mapEntitiesToDTOs(medicationRepository.findAll(), medicationMapper::toResponse);
     }
 
+    public List<MedicationResponse> getMedicationsByUserId(Long userId) {
+        userService.getUserEntityById(userId);
+        return entityMapperUtil.mapEntitiesToDTOs(medicationRepository.findAll(), medicationMapper::toResponse);
+    }
+
     public MedicationResponse getMedicationById(Long id) {
         return medicationMapper.toResponse(getMedicationEntityById(id));
     }
