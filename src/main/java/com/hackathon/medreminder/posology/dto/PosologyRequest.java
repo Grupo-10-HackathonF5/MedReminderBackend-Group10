@@ -3,9 +3,12 @@ package com.hackathon.medreminder.posology.dto;
 import com.hackathon.medreminder.posology.frecuency.FrequencyUnit;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.*;
+import lombok.Builder;
+
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 
+@Builder
 @Schema(name = "PosologyRequest", description = "Request DTO for posology creation or update")
 public record PosologyRequest(
 
