@@ -31,10 +31,6 @@ public class Posology {
     
     @Column(name = "end_date")
     private LocalDate endDate;
-
-    @ManyToOne(fetch = FetchType.LAZY, optional = false)
-    @JoinColumn(name = "user_id", nullable = false)
-    private User user;
     
     @Column(name = "day_time", nullable = false)
     private LocalDateTime dayTime;
@@ -58,4 +54,8 @@ public class Posology {
     
     @Column(name = "doses_number", nullable = false)
     private Double dosesNumber;
+
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @JoinColumn(name = "user_id", nullable = false)
+    private User user;
 }

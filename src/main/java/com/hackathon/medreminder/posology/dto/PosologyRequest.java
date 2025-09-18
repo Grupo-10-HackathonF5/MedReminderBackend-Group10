@@ -13,6 +13,10 @@ public record PosologyRequest(
         @Schema(description = "ID of the medication", example = "10", required = true)
         Long medicationId,
 
+        @NotNull(message = "User ID is required")
+        @Schema(description = "ID of the user", example = "1", required = true)
+        Long userId,
+
         @NotNull(message = "Start date is required")
         @Schema(description = "Start date for the posology", example = "2025-09-18", required = true)
         LocalDate startDate,
