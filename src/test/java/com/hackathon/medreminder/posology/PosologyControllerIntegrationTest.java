@@ -20,7 +20,6 @@ import org.springframework.http.MediaType;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.servlet.MockMvc;
 
-import java.sql.SQLOutput;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 
