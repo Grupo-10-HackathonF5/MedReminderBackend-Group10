@@ -65,21 +65,21 @@ class UserServiceTest {
     }
 
     @Test
-    void getUserByUsername_found() {
+    void getUserEntityByUsername_found() {
         when(userRepository.findByUsername(user.getUsername())).thenReturn(Optional.of(user));
 
-        User foundUser = userService.getUserByUsername(user.getUsername());
+        User foundUser = userService.getUserEntityByUsername(user.getUsername());
 
         assertNotNull(foundUser);
         assertEquals(user.getUsername(), foundUser.getUsername());
     }
 
     @Test
-    void getUserByUsername_throwsUserNotFoundByUsername() {
+    void getUserByUsername_throwsUserNotFoundEntityByUsername() {
         when(userRepository.findByUsername(user.getUsername())).thenReturn(Optional.empty());
 
         assertThrows(UserNotFoundByUsername.class,
-                () -> userService.getUserByUsername(user.getUsername()));
+                () -> userService.getUserEntityByUsername(user.getUsername()));
     }
 }
 

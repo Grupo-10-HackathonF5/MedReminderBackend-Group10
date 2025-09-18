@@ -1,8 +1,10 @@
 package com.hackathon.medreminder.shared.exception;
 
+import com.hackathon.medreminder.medication.exception.MedicationNotFoundById;
 import com.hackathon.medreminder.posology.exception.PosologyNotFoundById;
 import com.hackathon.medreminder.user.exception.UserAlreadyExistsByEmail;
 import com.hackathon.medreminder.user.exception.UserAlreadyExistsByUsername;
+import com.hackathon.medreminder.user.exception.UserNotFoundById;
 import com.hackathon.medreminder.user.exception.UserNotFoundByUsername;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.http.HttpStatus;
@@ -20,6 +22,20 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(UserNotFoundByUsername.class)
     public ResponseEntity<ErrorResponse> handleUserNotFoundByUsername(UserNotFoundByUsername exception, HttpServletRequest request) {
+        HttpStatus status = HttpStatus.NOT_FOUND;
+        ErrorResponse body = new ErrorResponse(status, exception.getMessage(), request);
+        return ResponseEntity.status(status).body(body);
+    }
+
+    @ExceptionHandler(UserNotFoundById.class)
+    public ResponseEntity<ErrorResponse> handleUserNotFoundById(UserNotFoundById exception, HttpServletRequest request) {
+        HttpStatus status = HttpStatus.NOT_FOUND;
+        ErrorResponse body = new ErrorResponse(status, exception.getMessage(), request);
+        return ResponseEntity.status(status).body(body);
+    }
+
+    @ExceptionHandler(MedicationNotFoundById.class)
+    public ResponseEntity<ErrorResponse> handleUserNotFoundById(MedicationNotFoundById exception, HttpServletRequest request) {
         HttpStatus status = HttpStatus.NOT_FOUND;
         ErrorResponse body = new ErrorResponse(status, exception.getMessage(), request);
         return ResponseEntity.status(status).body(body);
