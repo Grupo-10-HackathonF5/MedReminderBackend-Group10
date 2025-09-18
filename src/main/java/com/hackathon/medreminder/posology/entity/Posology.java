@@ -2,6 +2,7 @@ package com.hackathon.medreminder.posology.entity;
 
 import com.hackathon.medreminder.medication.entity.Medication;
 import com.hackathon.medreminder.posology.frecuency.FrequencyUnit;
+import com.hackathon.medreminder.user.entity.User;
 import lombok.*;
 
 import jakarta.persistence.*;
@@ -30,6 +31,10 @@ public class Posology {
     
     @Column(name = "end_date")
     private LocalDate endDate;
+
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @JoinColumn(name = "user_id", nullable = false)
+    private User user;
     
     @Column(name = "day_time", nullable = false)
     private LocalDateTime dayTime;
