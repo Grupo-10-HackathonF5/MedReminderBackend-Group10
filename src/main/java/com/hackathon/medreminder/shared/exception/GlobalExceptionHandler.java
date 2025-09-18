@@ -83,14 +83,14 @@ public class GlobalExceptionHandler {
         return ResponseEntity.status(status).body(body);
     }
 
-    @ExceptionHandler(Exception.class)
-    public ResponseEntity<ErrorResponse> handleAllUnhandledExceptions(Exception exception, HttpServletRequest request) {
-        HttpStatus status = HttpStatus.INTERNAL_SERVER_ERROR;
-
-        Map<String, String> errors = new HashMap<>();
-        errors.put("error", exception.getMessage() != null ? exception.getMessage() : "Unexpected error");
-
-        ErrorResponse body = new ErrorResponse(status, errors, request);
-        return ResponseEntity.status(status).body(body);
-    }
+//    @ExceptionHandler(Exception.class)
+//    public ResponseEntity<ErrorResponse> handleAllUnhandledExceptions(Exception exception, HttpServletRequest request) {
+//        HttpStatus status = HttpStatus.INTERNAL_SERVER_ERROR;
+//
+//        Map<String, String> errors = new HashMap<>();
+//        errors.put("error", exception.getMessage() != null ? exception.getMessage() : "Unexpected error");
+//
+//        ErrorResponse body = new ErrorResponse(status, errors, request);
+//        return ResponseEntity.status(status).body(body);
+//    }
 }

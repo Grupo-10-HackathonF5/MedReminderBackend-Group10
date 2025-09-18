@@ -11,6 +11,7 @@ import com.hackathon.medreminder.user.entity.User;
 import com.hackathon.medreminder.user.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -36,10 +37,13 @@ public class MedicationService {
                 .orElseThrow(() -> new MedicationNotFoundById(id));
     }
 
+    @Transactional
     public MedicationResponse createMedication(MedicationRequest medicationRequest) {
         User user = userService.getUserEntityById(medicationRequest.userId());
-        Medication medication = medicationMapper.toMedication(medicationRequest, user);
-        return medicationMapper.toResponse(medicationRepository.save(medication));
+        Medication medication = medicationMapper.toMedication(medicationRequest);
+        medication.setUser(user);
+        Medication savedMedication = medicationRepository.save(medication);
+        return medicationMapper.toResponse(savedMedication);
     }
 
     public MedicationResponse updateMedication(Long id, MedicationRequest medicationRequest) {
