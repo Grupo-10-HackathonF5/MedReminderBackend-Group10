@@ -30,7 +30,7 @@ public class JwtAuthFilter extends OncePerRequestFilter {
     private final TokenBlacklistService tokenBlacklistService;
 
     @Override
-    protected void doFilterInternal(HttpServletRequest request,
+    public void doFilterInternal(HttpServletRequest request,
                                     @NonNull HttpServletResponse response,
                                     @NonNull FilterChain filterChain) throws ServletException, IOException {
         final String authHeader = request.getHeader("Authorization");
