@@ -82,7 +82,7 @@ public class PosologyControllerIntegrationTest {
                 .dayTime(LocalDateTime.now())
                 .frequencyValue(8)
                 .user(savedUser)
-                .frequencyUnit(FrequencyUnit.HOURLY)
+                .frequencyUnit(FrequencyUnit.HOURS) // Cambio aquí: HOURLY -> HOURS
                 .quantity(1.0)
                 .reminderMessage("Take after meal")
                 .dosesNumber(5.0)
@@ -125,7 +125,7 @@ public class PosologyControllerIntegrationTest {
 
     @Test
     void testCreatePosology() throws Exception {
-
+        // Test con diferentes unidades de frecuencia
         PosologyRequest request = new PosologyRequest(
                 savedMedication.getId(),
                 savedUser.getId(),
@@ -133,7 +133,7 @@ public class PosologyControllerIntegrationTest {
                 LocalDate.now().plusDays(5),
                 LocalDateTime.now(),
                 12,
-                FrequencyUnit.HOURLY,
+                FrequencyUnit.HOURS, // Cambio aquí: HOURLY -> HOURS
                 2.0,
                 "Take twice daily",
                 3.0
@@ -150,6 +150,53 @@ public class PosologyControllerIntegrationTest {
     }
 
     @Test
+    void testCreatePosologyWithDifferentFrequencies() throws Exception {
+        // Test para cada 2 días
+        PosologyRequest dailyRequest = new PosologyRequest(
+                savedMedication.getId(),
+                savedUser.getId(),
+                LocalDate.now(),
+                LocalDate.now().plusDays(5),
+                LocalDateTime.now(),
+                2,
+                FrequencyUnit.DAYS, // Cada 2 días
+                1.0,
+                "Take every 2 days",
+                10.0
+        );
+
+        String jsonRequest = objectMapper.writeValueAsString(dailyRequest);
+
+        mockMvc.perform(post("/api/posologies")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(jsonRequest))
+                .andExpect(status().isCreated())
+                .andExpect(jsonPath("$.reminderMessage").value("Take every 2 days"));
+
+        // Test para cada semana
+        PosologyRequest weeklyRequest = new PosologyRequest(
+                savedMedication.getId(),
+                savedUser.getId(),
+                LocalDate.now(),
+                LocalDate.now().plusWeeks(4),
+                LocalDateTime.now(),
+                1,
+                FrequencyUnit.WEEKS, // Cada semana
+                1.0,
+                "Take weekly",
+                4.0
+        );
+
+        String weeklyJson = objectMapper.writeValueAsString(weeklyRequest);
+
+        mockMvc.perform(post("/api/posologies")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(weeklyJson))
+                .andExpect(status().isCreated())
+                .andExpect(jsonPath("$.reminderMessage").value("Take weekly"));
+    }
+
+    @Test
     void testUpdatePosology() throws Exception {
         PosologyRequest updateRequest = new PosologyRequest(
                 savedMedication.getId(),
@@ -158,7 +205,7 @@ public class PosologyControllerIntegrationTest {
                 LocalDate.now().plusDays(7),
                 LocalDateTime.now(),
                 6,
-                FrequencyUnit.HOURLY,
+                FrequencyUnit.HOURS, // Cambio aquí: HOURLY -> HOURS
                 3.0,
                 "Take three times daily",
                 4.0
@@ -186,7 +233,7 @@ public class PosologyControllerIntegrationTest {
 
     @Test
     void testCreatePosologyValidationError() throws Exception {
-        PosologyRequest invalidRequest = new PosologyRequest(null, null, null, null, null, null, null, null, null,0.0);
+        PosologyRequest invalidRequest = new PosologyRequest(null, null, null, null, null, null, null, null, null, 0.0);
 
         String json = objectMapper.writeValueAsString(invalidRequest);
 

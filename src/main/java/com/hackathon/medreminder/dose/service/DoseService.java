@@ -1,12 +1,12 @@
 package com.hackathon.medreminder.dose.service;
 
 import com.hackathon.medreminder.dose.dto.DoseMapper;
-import com.hackathon.medreminder.dose.dto.DoseMapperImpl;
 import com.hackathon.medreminder.dose.dto.DoseResponse;
 import com.hackathon.medreminder.dose.entity.Dose;
 import com.hackathon.medreminder.dose.exception.DoseNotFoundById;
 import com.hackathon.medreminder.dose.repository.DoseRepository;
 import com.hackathon.medreminder.posology.entity.Posology;
+import com.hackathon.medreminder.posology.frecuency.FrequencyUnit;
 import com.hackathon.medreminder.posology.repository.PosologyRepository;
 import com.hackathon.medreminder.user.entity.User;
 import lombok.RequiredArgsConstructor;
@@ -34,9 +34,11 @@ public class DoseService {
      * Genera las ocurrencias virtuales usando iCal4j sin persistir
      */
     private List<LocalDateTime> generateVirtualOccurrences(Posology posology, LocalDateTime from, LocalDateTime to) throws ParseException {
+        // Mapear nuestro FrequencyUnit al formato RRULE de iCal4j
+        String icalFreq = mapFrequencyUnitToICalFreq(posology.getFrequencyUnit());
+        
         // Construir RRULE desde los campos de frecuencia de Posology
-        String rrule = "FREQ=" + posology.getFrequencyUnit().name() +
-                ";INTERVAL=" + posology.getFrequencyValue();
+        String rrule = "FREQ=" + icalFreq + ";INTERVAL=" + posology.getFrequencyValue();
         
         if (posology.getEndDate() != null) {
             rrule += ";UNTIL=" + posology.getEndDate().format(DateTimeFormatter.ofPattern("yyyyMMdd")) + "T235959Z";
@@ -76,6 +78,19 @@ public class DoseService {
     }
 
     /**
+     * Mapea nuestro FrequencyUnit al formato RRULE de iCal4j
+     */
+    private String mapFrequencyUnitToICalFreq(FrequencyUnit frequencyUnit) {
+        return switch (frequencyUnit) {
+            case HOURS -> "HOURLY";
+            case HOURLY -> "HOURLY";
+            case DAYS -> "DAILY";
+            case WEEKS -> "WEEKLY";
+            case MONTHS -> "MONTHLY";
+        };
+    }
+
+    /**
      * Crea físicamente las dosis en la base de datos para las ocurrencias que no existen
      */
     @Transactional
@@ -95,7 +110,7 @@ public class DoseService {
                     .user(user)
                     .scheduledDateTime(scheduledTime)
                     .scheduledDay(scheduledTime.toLocalDate())
-                    .isTaken(false)
+                    .isTaken(false) // Usar el nombre correcto del campo
                     .takenTime(null)
                     .build();
                 
@@ -128,9 +143,9 @@ public class DoseService {
 
         // Convertir a DTO
         return storedDoses.stream()
-            .map(dose -> doseMapper.toResponse(dose))
-            .collect(Collectors.toList());
-    }
+        .map(dose -> doseMapper.toResponse(dose)) // Aquí se ha eliminado el segundo argumento
+        .collect(Collectors.toList());
+        }
 
     /**
      * Obtiene las dosis de hoy para un usuario, creando las que falten
@@ -172,7 +187,7 @@ public class DoseService {
     @Transactional
     public boolean markDoseAsTaken(Long doseId) {
         Dose dose = getDoseById(doseId);
-        dose.setIsTaken(true);
+        dose.setIsTaken(true); // Usar el nombre correcto del campo
         dose.setTakenTime(LocalDateTime.now());
         doseRepository.save(dose);
         return true;
@@ -181,7 +196,7 @@ public class DoseService {
     @Transactional
     public boolean markDoseAsNotTaken(Long doseId) {
         Dose dose = getDoseById(doseId);
-        dose.setIsTaken(false);
+        dose.setIsTaken(false); // Usar el nombre correcto del campo
         dose.setTakenTime(null);
         doseRepository.save(dose);
         return true;
@@ -193,7 +208,7 @@ public class DoseService {
     @Transactional
     public String toggleDoseStatus(Long doseId) {
         Dose dose = getDoseById(doseId);
-        if (Boolean.TRUE.equals(dose.getIsTaken())) {
+        if (Boolean.TRUE.equals(dose.getIsTaken())) { // Usar el getter correcto
             markDoseAsNotTaken(doseId);
             return "Dosis marcada como no tomada.";
         } else {
