@@ -25,6 +25,13 @@ public class PosologyController {
         List<PosologyResponse> posologies = posologyService.getAllPosologies();
         return posologies;
     }
+
+    @GetMapping("/users/{userId}")
+    @ResponseStatus(HttpStatus.OK)
+    public List<PosologyResponse> getPosologiesByUserId(Long userId) {
+        List<PosologyResponse> posologies = posologyService.getPosologiesByUserId(userId);
+        return posologies;
+    }
     
     @GetMapping("/{id}")
     @ResponseStatus(HttpStatus.OK)
@@ -32,11 +39,11 @@ public class PosologyController {
         return posologyService.getPosologyById(id);
     }
     
-    @GetMapping("/medication/{medicationId}")
-    public ResponseEntity<List<PosologyResponse>> getPosologiesByMedicationId(@PathVariable Long medicationId) {
-        List<PosologyResponse> posologies = posologyService.getPosologiesByMedicationId(medicationId);
-        return ResponseEntity.ok(posologies);
-    }
+//    @GetMapping("/medication/{medicationId}")
+//    public ResponseEntity<List<PosologyResponse>> getPosologiesByMedicationId(@PathVariable Long medicationId) {
+//        List<PosologyResponse> posologies = posologyService.getPosologiesByMedicationId(medicationId);
+//        return ResponseEntity.ok(posologies);
+//    }
     
     @GetMapping("/active")
     public ResponseEntity<List<PosologyResponse>> getActivePosologies() {

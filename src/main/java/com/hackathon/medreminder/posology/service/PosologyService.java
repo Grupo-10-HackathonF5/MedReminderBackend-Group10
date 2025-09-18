@@ -34,6 +34,11 @@ public class PosologyService {
     public PosologyResponse getPosologyById(Long id) {
         return posologyMapper.toResponse(getPosologyEntityById(id));
     }
+
+    public List<PosologyResponse> getPosologiesByUserId(Long userId) {
+        User user = userService.getUserEntityById(userId);
+        return entityMapperUtil.mapEntitiesToDTOs(posologyRepository.findByUser_Id(userId), posologyMapper::toResponse);
+    }
     
     public Posology getPosologyEntityById(Long id) {
         return posologyRepository.findById(id).
