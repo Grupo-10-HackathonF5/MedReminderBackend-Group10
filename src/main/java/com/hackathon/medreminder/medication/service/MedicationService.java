@@ -38,7 +38,8 @@ public class MedicationService {
 
     public MedicationResponse createMedication(MedicationRequest medicationRequest) {
         User user = userService.getUserEntityById(medicationRequest.userId());
-        Medication medication = medicationMapper.toMedication(medicationRequest, user);
+        Medication medication = medicationMapper.toMedication(medicationRequest);
+        medication.setUser(user);
         return medicationMapper.toResponse(medicationRepository.save(medication));
     }
 
