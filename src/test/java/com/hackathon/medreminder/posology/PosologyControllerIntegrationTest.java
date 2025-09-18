@@ -82,7 +82,7 @@ public class PosologyControllerIntegrationTest {
                 .dayTime(LocalDateTime.now())
                 .frequencyValue(8)
                 .user(savedUser)
-                .frequencyUnit(FrequencyUnit.HOUR)
+                .frequencyUnit(FrequencyUnit.HOURLY)
                 .quantity(1.0)
                 .reminderMessage("Take after meal")
                 .dosesNumber(5.0)
@@ -133,7 +133,7 @@ public class PosologyControllerIntegrationTest {
                 LocalDate.now().plusDays(5),
                 LocalDateTime.now(),
                 12,
-                FrequencyUnit.HOUR,
+                FrequencyUnit.HOURLY,
                 2.0,
                 "Take twice daily",
                 3.0
@@ -158,7 +158,7 @@ public class PosologyControllerIntegrationTest {
                 LocalDate.now().plusDays(7),
                 LocalDateTime.now(),
                 6,
-                FrequencyUnit.HOUR,
+                FrequencyUnit.HOURLY,
                 3.0,
                 "Take three times daily",
                 4.0

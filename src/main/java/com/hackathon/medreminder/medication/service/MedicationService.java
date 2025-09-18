@@ -42,8 +42,7 @@ public class MedicationService {
         User user = userService.getUserEntityById(medicationRequest.userId());
         Medication medication = medicationMapper.toMedication(medicationRequest);
         medication.setUser(user);
-        Medication savedMedication = medicationRepository.save(medication);
-        return medicationMapper.toResponse(savedMedication);
+        return medicationMapper.toResponse(medicationRepository.save(medication));
     }
 
     public MedicationResponse updateMedication(Long id, MedicationRequest medicationRequest) {

@@ -1,14 +1,19 @@
 package com.hackathon.medreminder.dose.dto;
 
+import lombok.Builder;
+
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 
+@Builder
 public record DoseResponse(
-        Long id,
-        Long reminderId,
+        Long doseId,
+        Long posologyId,
+        String medicationName,
+        Double dosesNumber,
+        Long medicationId,
         LocalDate scheduledDay,
         LocalDateTime scheduledDateTime,
-        Boolean taken,
-        LocalDateTime takenTime,
-        Long posologyId
+        Boolean isTaken,
+        LocalDateTime takenTime
 ) {}
