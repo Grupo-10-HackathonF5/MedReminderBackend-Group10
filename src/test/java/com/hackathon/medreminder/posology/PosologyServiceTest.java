@@ -1,5 +1,7 @@
 package com.hackathon.medreminder.posology;
 
+import com.hackathon.medreminder.medication.entity.Medication;
+import com.hackathon.medreminder.medication.service.MedicationService;
 import com.hackathon.medreminder.posology.dto.PosologyMapper;
 import com.hackathon.medreminder.posology.dto.PosologyRequest;
 import com.hackathon.medreminder.posology.dto.PosologyResponse;
@@ -30,6 +32,9 @@ class PosologyServiceTest {
     private PosologyRepository posologyRepository;
 
     @Mock
+    MedicationService medicationService;
+
+    @Mock
     private PosologyMapper posologyMapper;
 
     @Mock
@@ -41,17 +46,19 @@ class PosologyServiceTest {
     private Posology posology;
     private PosologyRequest posologyRequest;
     private PosologyResponse posologyResponse;
+    private Medication medication;
 
     @BeforeEach
     void setUp() {
-        posology = new Posology(1L, 10L, LocalDate.now(), null, LocalDate.now().atStartOfDay(),
+        Medication medication = Medication.builder().id(10L).build();
+        posology = new Posology(1L, medication, LocalDate.now(), null, LocalDate.now().atStartOfDay(),
                 3, null, 5.0, "Take with food", 10.0);
 
         posologyRequest = new PosologyRequest(
                 10L, LocalDate.now(), LocalDate.now(), LocalDate.now().atStartOfDay(),
                 3, FrequencyUnit.HOUR, 5.0, "Take with food", 10.0);
 
-        posologyResponse = new PosologyResponse(1L, 10L, LocalDate.now(), null,
+        posologyResponse = new PosologyResponse(1L, 10L, "medicationName", LocalDate.now(), null,
                 LocalDate.now().atStartOfDay(), 3, null, 5.0,
                 "Take with food", 10.0);
     }
@@ -95,13 +102,13 @@ class PosologyServiceTest {
         List<Posology> entities = List.of(posology);
         List<PosologyResponse> dtos = List.of(posologyResponse);
 
-        when(posologyRepository.findByMedicationId(posology.getMedicationId())).thenReturn(entities);
+        when(posologyRepository.findByMedicationId(posology.getMedication().getId())).thenReturn(entities);
         when(entityMapperUtil.mapEntitiesToDTOs(eq(entities), any())).thenReturn(List.of(posologyResponse));
 
-        List<PosologyResponse> result = posologyService.getPosologiesByMedicationId(posology.getMedicationId());
+        List<PosologyResponse> result = posologyService.getPosologiesByMedicationId(posology.getMedication().getId());
 
         assertEquals(dtos, result);
-        verify(posologyRepository).findByMedicationId(posology.getMedicationId());
+        verify(posologyRepository).findByMedicationId(posology.getMedication().getId());
         verify(entityMapperUtil).mapEntitiesToDTOs(eq(entities), any());
     }
 
@@ -122,6 +129,7 @@ class PosologyServiceTest {
 
     @Test
     void createPosology_savesAndMaps() {
+        when(medicationService.getMedicationEntityById(posologyRequest.medicationId())).thenReturn(medication);
         when(posologyMapper.toPosology(posologyRequest)).thenReturn(posology);
         when(posologyRepository.save(posology)).thenReturn(posology);
         when(posologyMapper.toResponse(posology)).thenReturn(posologyResponse);
@@ -129,6 +137,7 @@ class PosologyServiceTest {
         PosologyResponse response = posologyService.createPosology(posologyRequest);
 
         assertEquals(posologyResponse, response);
+        verify(medicationService).getMedicationEntityById(posologyRequest.medicationId());
         verify(posologyMapper).toPosology(posologyRequest);
         verify(posologyRepository).save(posology);
         verify(posologyMapper).toResponse(posology);
@@ -136,11 +145,12 @@ class PosologyServiceTest {
 
     @Test
     void updatePosology_updatesAndMaps() {
-        Posology updatedPosology = new Posology(posology.getId(), posologyRequest.medicationId(), posologyRequest.startDate(), posologyRequest.endDate(),
+        Posology updatedPosology = new Posology(posology.getId(), medication, posologyRequest.startDate(), posologyRequest.endDate(),
                 posologyRequest.dayTime(), posologyRequest.frequencyValue(), posologyRequest.frequencyUnit(), posologyRequest.quantity(),
                 posologyRequest.reminderMessage(), posologyRequest.dosesNumber());
 
         when(posologyRepository.findById(posology.getId())).thenReturn(Optional.of(posology));
+        when(medicationService.getMedicationEntityById(posologyRequest.medicationId())).thenReturn(medication);
         when(posologyRepository.save(any(Posology.class))).thenReturn(updatedPosology);
         when(posologyMapper.toResponse(any(Posology.class))).thenReturn(posologyResponse);
 
@@ -148,9 +158,11 @@ class PosologyServiceTest {
 
         assertEquals(posologyResponse, response);
         verify(posologyRepository).findById(posology.getId());
+        verify(medicationService).getMedicationEntityById(posologyRequest.medicationId());
         verify(posologyRepository).save(any(Posology.class));
         verify(posologyMapper).toResponse(any(Posology.class));
     }
+
 
     @Test
     void deletePosology_deletesAndReturnsMessage() {
@@ -159,7 +171,7 @@ class PosologyServiceTest {
 
         String message = posologyService.deletePosology(posology.getId());
 
-        assertEquals(String.format("Posology from %s deleted correctly", posology.getMedicationId()), message);
+        assertEquals(String.format("Posology from %s deleted correctly", posology.getMedication().getName()), message);
         verify(posologyRepository).findById(posology.getId());
         verify(posologyRepository).deleteById(posology.getId());
     }

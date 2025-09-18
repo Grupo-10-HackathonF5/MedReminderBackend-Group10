@@ -1,5 +1,6 @@
 package com.hackathon.medreminder.posology.entity;
 
+import com.hackathon.medreminder.medication.entity.Medication;
 import com.hackathon.medreminder.posology.frecuency.FrequencyUnit;
 import lombok.*;
 
@@ -19,9 +20,10 @@ public class Posology {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    
-    @Column(name = "medication_id", nullable = false)
-    private Long medicationId;
+
+    @ManyToOne(fetch = FetchType.EAGER, optional = false)
+    @JoinColumn(name = "medication_id", nullable = false)
+    private Medication medication;
     
     @Column(name = "start_date", nullable = false)
     private LocalDate startDate;

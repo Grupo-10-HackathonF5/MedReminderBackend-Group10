@@ -1,10 +1,15 @@
 package com.hackathon.medreminder.posology;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.hackathon.medreminder.medication.entity.Medication;
+import com.hackathon.medreminder.medication.repository.MedicationRepository;
 import com.hackathon.medreminder.posology.dto.PosologyRequest;
 import com.hackathon.medreminder.posology.entity.Posology;
 import com.hackathon.medreminder.posology.frecuency.FrequencyUnit;
 import com.hackathon.medreminder.posology.repository.PosologyRepository;
+import com.hackathon.medreminder.user.entity.User;
+import com.hackathon.medreminder.user.repository.UserRepository;
+import com.hackathon.medreminder.user.role.Role;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -29,21 +34,50 @@ public class PosologyControllerIntegrationTest {
 
     @Autowired
     private MockMvc mockMvc;
-
     @Autowired
     private PosologyRepository posologyRepository;
-
+    @Autowired
+    private MedicationRepository medicationRepository;
+    @Autowired
+    private UserRepository userRepository;
     @Autowired
     private ObjectMapper objectMapper;
 
     private Posology posology;
+    private Medication savedMedication;
 
     @BeforeEach
     void setup() {
         posologyRepository.deleteAll();
+        medicationRepository.deleteAll();
+        userRepository.deleteAll();
+
+        User user = User.builder()
+                .username("testuser")
+                .firstName("Test")
+                .lastName("User")
+                .email("test@example.com")
+                .password("password")
+                .role(Role.USER)
+                .build();
+
+        User savedUser = userRepository.save(user);
+
+        Medication medication = Medication.builder()
+                .user(savedUser)
+                .name("Ibuprofen")
+                .dosageQuantity(1)
+                .dosageUnit("1 mg")
+                .active(true)
+                .notes("Take with food")
+                .build();
+
+        savedMedication = medicationRepository.save(medication);
+
+        System.out.println("id" + savedMedication.getId());
 
         posology = Posology.builder()
-                .medicationId(100L)
+                .medication(savedMedication)
                 .startDate(LocalDate.now())
                 .endDate(LocalDate.now().plusDays(10))
                 .dayTime(LocalDateTime.now())
@@ -61,41 +95,41 @@ public class PosologyControllerIntegrationTest {
     void testGetAllPosologies() throws Exception {
         mockMvc.perform(get("/api/posologies"))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$[0].medicationId").value(100));
+                .andExpect(jsonPath("$[0].medicationId").value(savedMedication.getId()))
+                .andExpect(jsonPath("$[0].medicationName").value(savedMedication.getName()));
     }
 
     @Test
     void testGetPosologyById() throws Exception {
         mockMvc.perform(get("/api/posologies/{id}", posology.getId()))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.medicationId").value(100));
-    }
-
-    @Test
-    void testGetPosologyById_NotFound() throws Exception {
-        mockMvc.perform(get("/api/posologies/{id}", 9999L))
-                .andExpect(status().isNotFound());
+                .andExpect(jsonPath("$.medicationId").value(savedMedication.getId()))
+                .andExpect(jsonPath("$.medicationName").value(savedMedication.getName()));
     }
 
     @Test
     void testGetPosologiesByMedicationId() throws Exception {
-        mockMvc.perform(get("/api/posologies/medication/{medicationId}", 100L))
+        mockMvc.perform(get("/api/posologies/medication/{medicationId}", savedMedication.getId()))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$[0].medicationId").value(100));
+                .andExpect(jsonPath("$[0].medicationId").value(savedMedication.getId()))
+                .andExpect(jsonPath("$[0].medicationName").value(savedMedication.getName()));
     }
 
     @Test
     void testGetActivePosologies() throws Exception {
         mockMvc.perform(get("/api/posologies/active"))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$[0].medicationId").value(100));
+                .andExpect(jsonPath("$[0].medicationId").value(savedMedication.getId()))
+                .andExpect(jsonPath("$[0].medicationName").value(savedMedication.getName()));
     }
 
     @Test
-    void testCreateUpdateDeletePosology() throws Exception {
+    void testCreatePosology() throws Exception {
+
+        System.out.println("id" + savedMedication.getId());
 
         PosologyRequest request = new PosologyRequest(
-                200L,
+                savedMedication.getId(),
                 LocalDate.now(),
                 LocalDate.now().plusDays(5),
                 LocalDateTime.now(),
@@ -108,19 +142,18 @@ public class PosologyControllerIntegrationTest {
 
         String jsonRequest = objectMapper.writeValueAsString(request);
 
-        String createdJson = mockMvc.perform(post("/api/posologies")
+        mockMvc.perform(post("/api/posologies")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(jsonRequest))
                 .andExpect(status().isCreated())
-                .andExpect(jsonPath("$.medicationId").value(200))
-                .andReturn()
-                .getResponse()
-                .getContentAsString();
+                .andExpect(jsonPath("$.medicationId").value(savedMedication.getId()))
+                .andExpect(jsonPath("$.reminderMessage").value("Take twice daily"));
+    }
 
-        Long createdId = objectMapper.readTree(createdJson).get("id").asLong();
-
+    @Test
+    void testUpdatePosology() throws Exception {
         PosologyRequest updateRequest = new PosologyRequest(
-                201L,
+                savedMedication.getId(),
                 LocalDate.now(),
                 LocalDate.now().plusDays(7),
                 LocalDateTime.now(),
@@ -133,18 +166,21 @@ public class PosologyControllerIntegrationTest {
 
         String updateJson = objectMapper.writeValueAsString(updateRequest);
 
-        mockMvc.perform(put("/api/posologies/{id}", createdId)
+        mockMvc.perform(put("/api/posologies/{id}", posology.getId())
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(updateJson))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.medicationId").value(201))
+                .andExpect(jsonPath("$.medicationId").value(savedMedication.getId()))
                 .andExpect(jsonPath("$.reminderMessage").value("Take three times daily"));
+    }
 
-        mockMvc.perform(delete("/api/posologies/{id}", createdId))
+    @Test
+    void testDeletePosology() throws Exception {
+        mockMvc.perform(delete("/api/posologies/{id}", posology.getId()))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.message").value("Posology from 201 deleted correctly"));
+                .andExpect(jsonPath("$.message").value("Posology from " + savedMedication.getName() + " deleted correctly"));
 
-        mockMvc.perform(get("/api/posologies/{id}", createdId))
+        mockMvc.perform(get("/api/posologies/{id}", posology.getId()))
                 .andExpect(status().isNotFound());
     }
 
@@ -160,6 +196,3 @@ public class PosologyControllerIntegrationTest {
                 .andExpect(status().isBadRequest());
     }
 }
-
-
-
