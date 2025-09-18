@@ -1,5 +1,6 @@
 package com.hackathon.medreminder.medication.entity;
 
+import com.hackathon.medreminder.posology.entity.Posology;
 import com.hackathon.medreminder.user.entity.User;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -7,6 +8,9 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Table(name = "medications")
@@ -39,5 +43,8 @@ public class Medication {
 
     @Column(length = 1000)
     private String notes;
+
+    @OneToMany(mappedBy = "medication", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Posology> posologies = new ArrayList<>();
 
 }

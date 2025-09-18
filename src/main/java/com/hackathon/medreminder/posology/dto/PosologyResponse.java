@@ -8,6 +8,7 @@ import java.time.LocalDateTime;
 public record PosologyResponse(
         Long id,
         Long medicationId,
+        String medicationName,
         LocalDate startDate,
         LocalDate endDate,
         LocalDateTime dayTime,

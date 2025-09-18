@@ -1,5 +1,7 @@
 package com.hackathon.medreminder.posology.service;
 
+import com.hackathon.medreminder.medication.entity.Medication;
+import com.hackathon.medreminder.medication.service.MedicationService;
 import com.hackathon.medreminder.posology.dto.PosologyMapper;
 import com.hackathon.medreminder.posology.dto.PosologyRequest;
 import com.hackathon.medreminder.posology.dto.PosologyResponse;
@@ -20,6 +22,7 @@ public class PosologyService {
     private final PosologyRepository posologyRepository;
     private final PosologyMapper posologyMapper;
     private final EntityMapperUtil entityMapperUtil;
+    private final MedicationService medicationService;
     
     public List<PosologyResponse> getAllPosologies() {
         return entityMapperUtil.mapEntitiesToDTOs(posologyRepository.findAll(), posologyMapper::toResponse);
@@ -44,7 +47,9 @@ public class PosologyService {
     }
     
     public PosologyResponse createPosology(PosologyRequest posologyRequest) {
+        Medication medication = medicationService.getMedicationEntityById(posologyRequest.medicationId());
         Posology posology = posologyMapper.toPosology(posologyRequest);
+        posology.setMedication(medication);
         return posologyMapper.toResponse(posologyRepository.save(posology));
     }
     
@@ -56,12 +61,13 @@ public class PosologyService {
     public String deletePosology(Long id) {
         Posology posology = getPosologyEntityById(id);
         posologyRepository.deleteById(posology.getId());
-        return String.format("Posology from %s deleted correctly", posology.getMedicationId());
+        return String.format("Posology from %s deleted correctly", posology.getMedication().getName());
     }
     
     private Posology updateEntityFromDTO(Posology posology, PosologyRequest dto) {
         //check medication id exists
-        posology.setMedicationId(dto.medicationId());
+        Medication medication = medicationService.getMedicationEntityById(dto.medicationId());
+        posology.setMedication(medication);
         posology.setStartDate(dto.startDate());
         posology.setEndDate(dto.endDate());
         posology.setDayTime(dto.dayTime());
