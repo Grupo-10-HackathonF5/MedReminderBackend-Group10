@@ -9,6 +9,7 @@ import com.hackathon.medreminder.medication.repository.MedicationRepository;
 import com.hackathon.medreminder.medication.service.MedicationService;
 import com.hackathon.medreminder.shared.util.EntityMapperUtil;
 import com.hackathon.medreminder.user.entity.User;
+import com.hackathon.medreminder.user.service.UserService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -24,6 +25,9 @@ import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
 class MedicationServiceTest {
+
+    @Mock
+    private UserService userService;
 
     @Mock
     private MedicationRepository medicationRepository;
@@ -120,14 +124,16 @@ class MedicationServiceTest {
 
     @Test
     void createMedication_savesAndMaps() {
-        when(medicationMapper.toMedication(medicationRequest)).thenReturn(medication);
+        when(userService.getUserEntityById(medicationRequest.userId())).thenReturn(user);
+        when(medicationMapper.toMedication(medicationRequest, user)).thenReturn(medication);
         when(medicationRepository.save(medication)).thenReturn(medication);
         when(medicationMapper.toResponse(medication)).thenReturn(medicationResponse);
 
         MedicationResponse response = medicationService.createMedication(medicationRequest);
 
         assertEquals(medicationResponse, response);
-        verify(medicationMapper).toMedication(medicationRequest);
+        verify(userService).getUserEntityById(medicationRequest.userId());
+        verify(medicationMapper).toMedication(medicationRequest, user);
         verify(medicationRepository).save(medication);
         verify(medicationMapper).toResponse(medication);
     }
