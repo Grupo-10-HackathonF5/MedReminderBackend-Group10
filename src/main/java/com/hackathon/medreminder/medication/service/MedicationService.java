@@ -7,6 +7,8 @@ import com.hackathon.medreminder.medication.entity.Medication;
 import com.hackathon.medreminder.medication.exception.MedicationNotFoundById;
 import com.hackathon.medreminder.medication.repository.MedicationRepository;
 import com.hackathon.medreminder.shared.util.EntityMapperUtil;
+import com.hackathon.medreminder.user.entity.User;
+import com.hackathon.medreminder.user.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -19,6 +21,7 @@ public class MedicationService {
     private final MedicationRepository medicationRepository;
     private final MedicationMapper medicationMapper;
     private final EntityMapperUtil entityMapperUtil;
+    private final UserService userService;
 
     public List<MedicationResponse> getAllMedications() {
         return entityMapperUtil.mapEntitiesToDTOs(medicationRepository.findAll(), medicationMapper::toResponse);
@@ -34,7 +37,8 @@ public class MedicationService {
     }
 
     public MedicationResponse createMedication(MedicationRequest medicationRequest) {
-        Medication medication = medicationMapper.toMedication(medicationRequest);
+        User user = userService.getUserEntityById(medicationRequest.userId());
+        Medication medication = medicationMapper.toMedication(medicationRequest, user);
         return medicationMapper.toResponse(medicationRepository.save(medication));
     }
 
