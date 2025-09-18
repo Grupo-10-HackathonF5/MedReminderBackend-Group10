@@ -1,5 +1,6 @@
 package com.hackathon.medreminder.posology.service;
 
+import com.hackathon.medreminder.dose.service.DoseSchedulerService;
 import com.hackathon.medreminder.medication.entity.Medication;
 import com.hackathon.medreminder.medication.service.MedicationService;
 import com.hackathon.medreminder.posology.dto.PosologyMapper;
@@ -26,6 +27,7 @@ public class PosologyService {
     private final EntityMapperUtil entityMapperUtil;
     private final MedicationService medicationService;
     private final UserService userService;
+    private final DoseSchedulerService doseSchedulerService;
     
     public List<PosologyResponse> getAllPosologies() {
         return entityMapperUtil.mapEntitiesToDTOs(posologyRepository.findAll(), posologyMapper::toResponse);
@@ -62,7 +64,9 @@ public class PosologyService {
         Posology posology = posologyMapper.toPosology(posologyRequest);
         posology.setUser(user);
         posology.setMedication(medication);
-        return posologyMapper.toResponse(posologyRepository.save(posology));
+        Posology savedPosology = posologyRepository.save(posology);
+        doseSchedulerService.scheduleDosesForPosology(savedPosology);
+        return posologyMapper.toResponse(savedPosology);
     }
     
     public PosologyResponse updatePosology(Long id, PosologyRequest posologyRequest) {

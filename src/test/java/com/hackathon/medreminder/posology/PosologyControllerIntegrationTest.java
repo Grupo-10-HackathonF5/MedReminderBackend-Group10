@@ -22,6 +22,7 @@ import org.springframework.test.web.servlet.MockMvc;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.LocalTime;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
@@ -79,7 +80,7 @@ public class PosologyControllerIntegrationTest {
                 .medication(savedMedication)
                 .startDate(LocalDate.now())
                 .endDate(LocalDate.now().plusDays(10))
-                .dayTime(LocalDateTime.now())
+                .dayTime(LocalTime.now())
                 .frequencyValue(8)
                 .user(savedUser)
                 .frequencyUnit(FrequencyUnit.HOURS) // Cambio aquí: HOURLY -> HOURS
@@ -115,7 +116,7 @@ public class PosologyControllerIntegrationTest {
                 savedUser.getId(),
                 LocalDate.now(),
                 LocalDate.now().plusDays(5),
-                LocalDateTime.now(),
+                LocalTime.now(),
                 12,
                 FrequencyUnit.HOURS, // Cambio aquí: HOURLY -> HOURS
                 2.0,
@@ -141,7 +142,7 @@ public class PosologyControllerIntegrationTest {
                 savedUser.getId(),
                 LocalDate.now(),
                 LocalDate.now().plusDays(5),
-                LocalDateTime.now(),
+                LocalTime.now(),
                 2,
                 FrequencyUnit.DAYS, // Cada 2 días
                 1.0,
@@ -163,7 +164,7 @@ public class PosologyControllerIntegrationTest {
                 savedUser.getId(),
                 LocalDate.now(),
                 LocalDate.now().plusWeeks(4),
-                LocalDateTime.now(),
+                LocalTime.now(),
                 1,
                 FrequencyUnit.WEEKS, // Cada semana
                 1.0,
@@ -187,7 +188,7 @@ public class PosologyControllerIntegrationTest {
                 savedUser.getId(),
                 LocalDate.now(),
                 LocalDate.now().plusDays(7),
-                LocalDateTime.now(),
+                LocalTime.now(),
                 6,
                 FrequencyUnit.HOURS, // Cambio aquí: HOURLY -> HOURS
                 3.0,

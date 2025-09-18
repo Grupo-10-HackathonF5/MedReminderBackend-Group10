@@ -4,6 +4,7 @@ import com.hackathon.medreminder.posology.frecuency.FrequencyUnit;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.LocalTime;
 
 public record PosologyResponse(
         Long id,
@@ -11,7 +12,7 @@ public record PosologyResponse(
         String medicationName,
         LocalDate startDate,
         LocalDate endDate,
-        LocalDateTime dayTime,
+        LocalTime dayTime,
         Integer frequencyValue,
         FrequencyUnit frequencyUnit,
         Double quantity,

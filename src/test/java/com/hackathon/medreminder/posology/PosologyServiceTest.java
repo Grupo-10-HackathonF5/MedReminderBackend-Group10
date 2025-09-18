@@ -1,5 +1,6 @@
 package com.hackathon.medreminder.posology;
 
+import com.hackathon.medreminder.dose.service.DoseSchedulerService;
 import com.hackathon.medreminder.medication.entity.Medication;
 import com.hackathon.medreminder.medication.service.MedicationService;
 import com.hackathon.medreminder.posology.dto.PosologyMapper;
@@ -46,6 +47,9 @@ class PosologyServiceTest {
     @Mock
     private UserService userService;
 
+    @Mock
+    private DoseSchedulerService doseSchedulerService;
+
     @InjectMocks
     private PosologyService posologyService;
 
@@ -85,7 +89,7 @@ class PosologyServiceTest {
                 .userId(user.getId())
                 .startDate(LocalDate.now())
                 .endDate(null)  // if allowed, otherwise set a valid LocalDate
-                .dayTime(LocalDateTime.of(2025, 9, 18, 8, 0)) // sample time
+                .dayTime(LocalDateTime.of(2025, 9, 18, 8, 0).toLocalTime()) // sample time
                 .frequencyValue(1)
                 .frequencyUnit(FrequencyUnit.DAYS)
                 .quantity(2.0)
@@ -170,6 +174,7 @@ class PosologyServiceTest {
         verify(medicationService).getMedicationEntityById(posologyRequest.medicationId());
         verify(userService).getUserEntityById(posologyRequest.userId());
         verify(posologyRepository).save(posology);
+        verify(doseSchedulerService).scheduleDosesForPosology(posology);
     }
 
     @Test

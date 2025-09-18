@@ -4,9 +4,11 @@ import com.hackathon.medreminder.posology.frecuency.FrequencyUnit;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.*;
 import lombok.Builder;
+import net.fortuna.ical4j.model.DateTime;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.LocalTime;
 
 @Builder
 @Schema(name = "PosologyRequest", description = "Request DTO for posology creation or update")
@@ -29,8 +31,8 @@ public record PosologyRequest(
         LocalDate endDate,
 
         @NotNull(message = "Day time is required")
-        @Schema(description = "Time of day for taking medication", example = "2025-09-18T08:00:00", required = true)
-        LocalDateTime dayTime,
+        @Schema(description = "Time of day for taking medication", example = "08:00:00", required = true)
+        LocalTime dayTime,
 
         @NotNull(message = "Frequency value is required")
         @Min(value = 1, message = "Frequency value must be greater than 0")

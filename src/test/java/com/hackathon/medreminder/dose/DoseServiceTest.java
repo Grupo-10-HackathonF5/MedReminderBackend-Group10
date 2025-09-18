@@ -4,6 +4,7 @@ import com.hackathon.medreminder.dose.dto.DoseMapper;
 import com.hackathon.medreminder.dose.dto.DoseResponse;
 import com.hackathon.medreminder.dose.entity.Dose;
 import com.hackathon.medreminder.dose.repository.DoseRepository;
+import com.hackathon.medreminder.dose.service.DoseSchedulerService;
 import com.hackathon.medreminder.dose.service.DoseService;
 import com.hackathon.medreminder.posology.entity.Posology;
 import com.hackathon.medreminder.posology.frecuency.FrequencyUnit;
@@ -59,7 +60,7 @@ class DoseServiceTest {
                 .user(user)
                 .startDate(LocalDate.now())
                 .endDate(LocalDate.now().plusDays(7))
-                .dayTime(LocalDateTime.now().withHour(8).withMinute(0))
+                .dayTime(LocalDateTime.now().withHour(8).withMinute(0).toLocalTime())
                 .frequencyValue(8)
                 .frequencyUnit(FrequencyUnit.HOURS)
                 .quantity(1.0)
@@ -73,7 +74,7 @@ class DoseServiceTest {
                 .user(user)
                 .startDate(LocalDate.now())
                 .endDate(LocalDate.now().plusWeeks(2))
-                .dayTime(LocalDateTime.now().withHour(9).withMinute(0))
+                .dayTime(LocalDateTime.now().withHour(9).withMinute(0).toLocalTime())
                 .frequencyValue(2)
                 .frequencyUnit(FrequencyUnit.DAYS)
                 .quantity(1.0)
@@ -87,7 +88,7 @@ class DoseServiceTest {
                 .user(user)
                 .startDate(LocalDate.now())
                 .endDate(LocalDate.now().plusWeeks(10))
-                .dayTime(LocalDateTime.now().withHour(10).withMinute(0))
+                .dayTime(LocalDateTime.now().withHour(10).withMinute(0).toLocalTime())
                 .frequencyValue(1)
                 .frequencyUnit(FrequencyUnit.WEEKS)
                 .quantity(1.0)
@@ -101,7 +102,7 @@ class DoseServiceTest {
                 .user(user)
                 .startDate(LocalDate.now())
                 .endDate(LocalDate.now().plusMonths(5))
-                .dayTime(LocalDateTime.now().withHour(11).withMinute(0))
+                .dayTime(LocalDateTime.now().withHour(11).withMinute(0).toLocalTime())
                 .frequencyValue(1)
                 .frequencyUnit(FrequencyUnit.MONTHS)
                 .quantity(1.0)
