@@ -45,6 +45,7 @@ public class PosologyControllerIntegrationTest {
 
     private Posology posology;
     private Medication savedMedication;
+    private User savedUser;
 
     @BeforeEach
     void setup() {
@@ -61,7 +62,7 @@ public class PosologyControllerIntegrationTest {
                 .role(Role.USER)
                 .build();
 
-        User savedUser = userRepository.save(user);
+        savedUser = userRepository.save(user);
 
         Medication medication = Medication.builder()
                 .user(savedUser)
@@ -74,14 +75,13 @@ public class PosologyControllerIntegrationTest {
 
         savedMedication = medicationRepository.save(medication);
 
-        System.out.println("id" + savedMedication.getId());
-
         posology = Posology.builder()
                 .medication(savedMedication)
                 .startDate(LocalDate.now())
                 .endDate(LocalDate.now().plusDays(10))
                 .dayTime(LocalDateTime.now())
                 .frequencyValue(8)
+                .user(savedUser)
                 .frequencyUnit(FrequencyUnit.HOUR)
                 .quantity(1.0)
                 .reminderMessage("Take after meal")
@@ -126,10 +126,9 @@ public class PosologyControllerIntegrationTest {
     @Test
     void testCreatePosology() throws Exception {
 
-        System.out.println("id" + savedMedication.getId());
-
         PosologyRequest request = new PosologyRequest(
                 savedMedication.getId(),
+                savedUser.getId(),
                 LocalDate.now(),
                 LocalDate.now().plusDays(5),
                 LocalDateTime.now(),
@@ -154,6 +153,7 @@ public class PosologyControllerIntegrationTest {
     void testUpdatePosology() throws Exception {
         PosologyRequest updateRequest = new PosologyRequest(
                 savedMedication.getId(),
+                savedUser.getId(),
                 LocalDate.now(),
                 LocalDate.now().plusDays(7),
                 LocalDateTime.now(),
@@ -186,7 +186,7 @@ public class PosologyControllerIntegrationTest {
 
     @Test
     void testCreatePosologyValidationError() throws Exception {
-        PosologyRequest invalidRequest = new PosologyRequest(null, null, null, null, 0, null, 0.0, null, 0.0);
+        PosologyRequest invalidRequest = new PosologyRequest(null, null, null, null, null, null, null, null, null,0.0);
 
         String json = objectMapper.writeValueAsString(invalidRequest);
 

@@ -9,6 +9,8 @@ import com.hackathon.medreminder.posology.entity.Posology;
 import com.hackathon.medreminder.posology.exception.PosologyNotFoundById;
 import com.hackathon.medreminder.posology.repository.PosologyRepository;
 import com.hackathon.medreminder.shared.util.EntityMapperUtil;
+import com.hackathon.medreminder.user.entity.User;
+import com.hackathon.medreminder.user.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -23,6 +25,7 @@ public class PosologyService {
     private final PosologyMapper posologyMapper;
     private final EntityMapperUtil entityMapperUtil;
     private final MedicationService medicationService;
+    private final UserService userService;
     
     public List<PosologyResponse> getAllPosologies() {
         return entityMapperUtil.mapEntitiesToDTOs(posologyRepository.findAll(), posologyMapper::toResponse);
@@ -48,7 +51,9 @@ public class PosologyService {
     
     public PosologyResponse createPosology(PosologyRequest posologyRequest) {
         Medication medication = medicationService.getMedicationEntityById(posologyRequest.medicationId());
+        User user = userService.getUserEntityById(posologyRequest.userId());
         Posology posology = posologyMapper.toPosology(posologyRequest);
+        posology.setUser(user);
         posology.setMedication(medication);
         return posologyMapper.toResponse(posologyRepository.save(posology));
     }

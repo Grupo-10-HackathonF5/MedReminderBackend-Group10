@@ -1,0 +1,25 @@
+package com.hackathon.medreminder.dose.controller;
+
+import com.hackathon.medreminder.dose.service.DoseService;
+import com.hackathon.medreminder.shared.dto.ApiMessage;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
+
+@RestController
+@RequestMapping("/api/doses")
+public class DoseController {
+
+    private final DoseService doseService;
+
+    public DoseController(DoseService doseService) {
+        this.doseService = doseService;
+    }
+
+    @PatchMapping("/{doseId}/taken")
+    @ResponseStatus(HttpStatus.OK)
+    public ApiMessage markDoseAsTaken(@PathVariable Long doseId) {
+        doseService.markDoseAsTaken(doseId);
+        return new ApiMessage("Dose marked as taken");
+    }
+}

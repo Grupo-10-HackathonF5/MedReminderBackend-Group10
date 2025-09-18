@@ -11,6 +11,8 @@ import java.util.List;
 
 @Repository
 public interface PosologyRepository extends JpaRepository<Posology, Long> {
+
+    List<Posology> findByUser_Id(Long userId);
     
     // Buscar posologías por medicamento
     List<Posology> findByMedicationId(Long medicationId);
