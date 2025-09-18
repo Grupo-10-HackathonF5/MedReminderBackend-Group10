@@ -6,9 +6,11 @@ import org.springframework.stereotype.Repository;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 public interface DoseRepository extends JpaRepository<Dose, Long> {
 
     List<Dose> findByUser_IdAndScheduledDateTimeBetween(Long userId, LocalDateTime from, LocalDateTime to);
+    Optional<Dose> findByPosology_IdAndScheduledDateTime(Long posologyId, LocalDateTime scheduledDateTime);
 }
