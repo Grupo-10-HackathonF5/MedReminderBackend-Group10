@@ -44,7 +44,7 @@ public class DoseSchedulerService {
 
     private LocalDateTime getEndDateTime(Posology posology, LocalDateTime startDateTime) {
         return posology.getEndDate() == null
-                ? startDateTime.plusYears(1) // Default 1 year in future if no endDate
+                ? startDateTime.plusYears(1)
                 : posology.getEndDate().atTime(23, 59, 59);
     }
 

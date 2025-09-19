@@ -9,8 +9,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.time.DayOfWeek;
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.*;
 import java.util.stream.Collectors;
@@ -29,19 +27,10 @@ public class DoseService {
     }
 
     public List<DoseResponse> getDosesForUser(Long userId, LocalDateTime fromDateTime, LocalDateTime toDateTime) {
-        List<Dose> doses = doseRepository.findByUser_IdAndScheduledDateTimeBetween(userId, fromDateTime, toDateTime);
+        List<Dose> doses = doseRepository.findByUser_IdAndScheduledDateTimeBetweenOrderByScheduledDateTimeAsc(userId, fromDateTime, toDateTime);
         return doses.stream()
                 .map(doseMapper::toResponse)
                 .collect(Collectors.toList());
-    }
-
-    @Transactional(readOnly = true)
-    public List<DoseResponse> getDosesForCurrentWeek(Long userId) {
-        LocalDate today = LocalDate.now();
-        LocalDate startOfWeek = today.with(DayOfWeek.MONDAY);
-        LocalDateTime startOfWeekDateTime = startOfWeek.atStartOfDay();
-        LocalDateTime endOfWeekDateTime = startOfWeekDateTime.plusDays(6).withHour(23).withMinute(59).withSecond(59).withNano(999999999);
-        return getDosesForUser(userId, startOfWeekDateTime, endOfWeekDateTime);
     }
 
     public Dose getDoseById(Long doseId) {
