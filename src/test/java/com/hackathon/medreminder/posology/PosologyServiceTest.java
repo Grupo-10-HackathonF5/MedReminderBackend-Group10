@@ -78,7 +78,7 @@ class PosologyServiceTest {
                 .startDate(LocalDate.now())
                 .endDate(null)
                 .frequencyValue(1)
-                .frequencyUnit(FrequencyUnit.DAYS)
+                .frequencyUnit(FrequencyUnit.DAILY)
                 .quantity(2.0)
                 .reminderMessage("Take after breakfast")
                 .dosesNumber(10.0)
@@ -91,7 +91,7 @@ class PosologyServiceTest {
                 .endDate(null)  // if allowed, otherwise set a valid LocalDate
                 .dayTime(LocalDateTime.of(2025, 9, 18, 8, 0).toLocalTime()) // sample time
                 .frequencyValue(1)
-                .frequencyUnit(FrequencyUnit.DAYS)
+                .frequencyUnit(FrequencyUnit.DAILY)
                 .quantity(2.0)
                 .reminderMessage("Take after breakfast")
                 .dosesNumber(10.0)

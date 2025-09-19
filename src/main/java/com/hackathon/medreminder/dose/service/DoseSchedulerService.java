@@ -68,10 +68,10 @@ public class DoseSchedulerService {
         int value = posology.getFrequencyValue();
 
         return switch (unit) {
-            case HOURS -> currentDoseDateTime.plusHours(value);
-            case DAYS -> currentDoseDateTime.plusDays(value);
-            case WEEKS -> currentDoseDateTime.plusWeeks(value);
-            case MONTHS -> currentDoseDateTime.plusMonths(value);
+            case HOURLY -> currentDoseDateTime.plusHours(value);
+            case DAILY -> currentDoseDateTime.plusDays(value);
+            case WEEKLY -> currentDoseDateTime.plusWeeks(value);
+            case MONTHLY -> currentDoseDateTime.plusMonths(value);
             default -> throw new IllegalArgumentException("Unsupported frequency unit: " + unit);
         };
     }
