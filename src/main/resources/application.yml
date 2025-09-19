@@ -16,20 +16,19 @@ spring:
     password: ${DB_PASSWORD}
     driver-class-name: com.mysql.cj.jdbc.Driver
 
+  sql:
+    init:
+      mode: always
+
   jpa:
     hibernate:
-      ddl-auto: none
+      ddl-auto: update
       format_sql: true
     defer-datasource-initialization: true
     properties:
-      hibernate.dialect: org.hibernate.dialect.MySQLDialect
+      hibernate:
+        dialect: org.hibernate.dialect.MySQLDialect
     show-sql: true
-
-  sql:
-    init:
-      mode: always                    # Always run init scripts (for non-embedded DBs too)
-      schema-locations: classpath:schema.sql
-      data-locations: classpath:data.sql
 
   springdoc:
     api-docs:
