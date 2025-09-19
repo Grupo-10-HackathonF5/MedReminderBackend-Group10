@@ -31,3 +31,9 @@ build/
 
 ### VS Code ###
 .vscode/
+
+### Environment variables ###
+.env
+
+### macOS system files ###
+.DS_Store
