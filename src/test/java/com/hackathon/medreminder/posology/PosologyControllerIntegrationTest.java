@@ -21,7 +21,7 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.servlet.MockMvc;
 
 import java.time.LocalDate;
-import java.time.LocalDateTime;
+import java.time.LocalTime;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
@@ -79,10 +79,10 @@ public class PosologyControllerIntegrationTest {
                 .medication(savedMedication)
                 .startDate(LocalDate.now())
                 .endDate(LocalDate.now().plusDays(10))
-                .dayTime(LocalDateTime.now())
+                .dayTime(LocalTime.now())
                 .frequencyValue(8)
                 .user(savedUser)
-                .frequencyUnit(FrequencyUnit.HOURS) // Cambio aquí: HOURLY -> HOURS
+                .frequencyUnit(FrequencyUnit.HOURLY) // Cambio aquí: HOURLY -> HOURLY
                 .quantity(1.0)
                 .reminderMessage("Take after meal")
                 .dosesNumber(5.0)
@@ -115,9 +115,9 @@ public class PosologyControllerIntegrationTest {
                 savedUser.getId(),
                 LocalDate.now(),
                 LocalDate.now().plusDays(5),
-                LocalDateTime.now(),
+                LocalTime.now(),
                 12,
-                FrequencyUnit.HOURS, // Cambio aquí: HOURLY -> HOURS
+                FrequencyUnit.HOURLY, // Cambio aquí: HOURLY -> HOURLY
                 2.0,
                 "Take twice daily",
                 3.0
@@ -141,9 +141,9 @@ public class PosologyControllerIntegrationTest {
                 savedUser.getId(),
                 LocalDate.now(),
                 LocalDate.now().plusDays(5),
-                LocalDateTime.now(),
+                LocalTime.now(),
                 2,
-                FrequencyUnit.DAYS, // Cada 2 días
+                FrequencyUnit.DAILY, // Cada 2 días
                 1.0,
                 "Take every 2 days",
                 10.0
@@ -163,9 +163,9 @@ public class PosologyControllerIntegrationTest {
                 savedUser.getId(),
                 LocalDate.now(),
                 LocalDate.now().plusWeeks(4),
-                LocalDateTime.now(),
+                LocalTime.now(),
                 1,
-                FrequencyUnit.WEEKS, // Cada semana
+                FrequencyUnit.WEEKLY, // Cada semana
                 1.0,
                 "Take weekly",
                 4.0
@@ -187,9 +187,9 @@ public class PosologyControllerIntegrationTest {
                 savedUser.getId(),
                 LocalDate.now(),
                 LocalDate.now().plusDays(7),
-                LocalDateTime.now(),
+                LocalTime.now(),
                 6,
-                FrequencyUnit.HOURS, // Cambio aquí: HOURLY -> HOURS
+                FrequencyUnit.HOURLY, // Cambio aquí: HOURLY -> HOURLY
                 3.0,
                 "Take three times daily",
                 4.0

@@ -7,8 +7,11 @@ import com.hackathon.medreminder.user.entity.User;
 import lombok.*;
 
 import jakarta.persistence.*;
+import net.fortuna.ical4j.model.DateTime;
+
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -36,7 +39,7 @@ public class Posology {
     private LocalDate endDate;
     
     @Column(name = "day_time", nullable = false)
-    private LocalDateTime dayTime;
+    private LocalTime dayTime;
     
     // Frecuencia: se toma cada frequencyValue frequencyUnit
     // Ejemplos: cada 8 horas (frequencyValue=8, frequencyUnit=HOUR)

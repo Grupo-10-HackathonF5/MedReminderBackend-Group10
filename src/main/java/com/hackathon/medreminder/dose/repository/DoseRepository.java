@@ -10,7 +10,7 @@ import java.util.Optional;
 
 @Repository
 public interface DoseRepository extends JpaRepository<Dose, Long> {
-
-    List<Dose> findByUser_IdAndScheduledDateTimeBetween(Long userId, LocalDateTime from, LocalDateTime to);
+    List<Dose> findByUser_IdAndScheduledDateTimeBetweenOrderByScheduledDateTimeAsc(Long userId, LocalDateTime from, LocalDateTime to);
+    List<Dose> findByUser_Id(Long userId);
     Optional<Dose> findByPosology_IdAndScheduledDateTime(Long posologyId, LocalDateTime scheduledDateTime);
 }
